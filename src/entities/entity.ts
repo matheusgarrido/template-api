@@ -5,11 +5,19 @@ export class Entity<EntityProps> {
   $id: EntityId | undefined;
 
   constructor(properties: Partial<EntityProps>, id?: EntityId) {
-    this.$properties = properties || {};
+    console.log('properties partial: ==>', properties);
+    this.$properties = properties || null;
     this.$id = id;
   }
 
-  get id(): EntityId | undefined {
+  get id() {
     return this.$id;
+  }
+
+  toJSON() {
+    return {
+      ...this.$properties,
+      id: this.$id,
+    };
   }
 }

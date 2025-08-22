@@ -1,7 +1,6 @@
 import { Entity } from './entity';
 
-export interface IUserEntityProps {
-  id: string;
+export interface IUserEntity {
   name?: string;
   email?: string;
   password?: string;
@@ -9,11 +8,7 @@ export interface IUserEntityProps {
   updatedAt?: Date;
 }
 
-export class UserEntity extends Entity<IUserEntityProps> {
-  constructor(properties: IUserEntityProps, id?: string) {
-    super(properties, id);
-  }
-
+export class User extends Entity<IUserEntity> {
   get name() {
     return this.$properties.name;
   }
