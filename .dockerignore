@@ -1,7 +1,10 @@
 # Folders
 .vscode
+.github
+aws
 dist
 node_modules
+scripts
 
 # Config files
 .prettierrc
