@@ -56,5 +56,5 @@ jobs:
         run: |
           aws ecs update-service \
             --cluster party-stories-cluster \
-            --service party-stories-service \
+            --service party-stories-api \
             --force-new-deployment
