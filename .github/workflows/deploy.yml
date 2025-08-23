@@ -35,12 +35,17 @@ jobs:
 
       - name: Build and push Docker image
         env:
-          ECR_REPOSITORY: party-stories/api # mesmo nome que no ECR
+          ECR_REPOSITORY: party-stories/api
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Ensure CloudWatch log group exists
+        run: |
+          aws logs describe-log-groups --log-group-name /ecs/party-stories-task || \
+          aws logs create-log-group --log-group-name /ecs/party-stories-task
 
       - name: Register new task definition
         id: taskdef
@@ -52,9 +57,25 @@ jobs:
           sed "s|<IMAGE>|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" taskdef.json > taskdef-rendered.json
           aws ecs register-task-definition --cli-input-json file://taskdef-rendered.json
 
-      - name: Update ECS service
+      - name: Update ECS service (or create if it doesn't exist)
+        env:
+          CLUSTER_NAME: party-stories-cluster
+          SERVICE_NAME: party-stories-api
+          TASK_FAMILY: party-stories-task
         run: |
-          aws ecs update-service \
-            --cluster party-stories-cluster \
-            --service party-stories-api \
-            --force-new-deployment
+          if aws ecs describe-services --cluster $CLUSTER_NAME --services $SERVICE_NAME | grep "MISSING"; then
+            # Service doesn't exist, create it
+            aws ecs create-service \
+              --cluster $CLUSTER_NAME \
+              --service-name $SERVICE_NAME \
+              --task-definition $TASK_FAMILY \
+              --desired-count 1 \
+              --launch-type FARGATE \
+              --network-configuration "awsvpcConfiguration={subnets=[subnet-publica-1,subnet-publica-2],securityGroups=[sg-xxxxx],assignPublicIp=ENABLED}"
+          else
+            # Service exists, update it
+            aws ecs update-service \
+              --cluster $CLUSTER_NAME \
+              --service $SERVICE_NAME \
+              --force-new-deployment
+          fi
