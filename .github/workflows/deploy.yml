@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -35,21 +35,26 @@ jobs:
 
       - name: Build and push Docker image
         env:
-          ECR_REPOSITORY: party-stories/api # Substitua pelo nome do seu repo ECR
+          ECR_REPOSITORY: party-stories/api # mesmo nome que no ECR
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Update ECS service
+      - name: Register new task definition
+        id: taskdef
         env:
-          ECR_REPOSITORY: sua-app-repo
+          ECR_REPOSITORY: party-stories/api
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          sed "s|<IMAGE>|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" taskdef.json > taskdef-rendered.json
+          aws ecs register-task-definition --cli-input-json file://taskdef-rendered.json
+
+      - name: Update ECS service
+        run: |
           aws ecs update-service \
-            --cluster seu-cluster-ecs-name \
-            --service seu-servico-ecs-name \
-            --force-new-deployment \
-            --task-definition "$(aws ecs describe-task-definition --task-definition seu-task-definition-name | jq '.taskDefinition | del(.taskDefinitionArn, .revision, .status, .compatibilities) | { containerDefinitions: [ { name: "nome-do-seu-container", image: "'$ECR_REGISTRY'/'$ECR_REPOSITORY':'$IMAGE_TAG'" } ] }')"
+            --cluster party-stories-cluster \
+            --service party-stories-service \
+            --force-new-deployment
