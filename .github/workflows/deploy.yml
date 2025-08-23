@@ -8,6 +8,10 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      CLUSTER_NAME: party-stories-cluster
+      SERVICE_NAME: party-stories-api
+      TASK_FAMILY: party-stories-task
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -44,8 +48,9 @@ jobs:
 
       - name: Ensure CloudWatch log group exists
         run: |
-          aws logs describe-log-groups --log-group-name /ecs/party-stories-task || \
-          aws logs create-log-group --log-group-name /ecs/party-stories-task
+          if ! aws logs describe-log-groups --log-group-name-prefix /ecs/$TASK_FAMILY | grep -q "/ecs/$TASK_FAMILY"; then
+            aws logs create-log-group --log-group-name /ecs/$TASK_FAMILY
+          fi
 
       - name: Register new task definition
         id: taskdef
@@ -58,10 +63,6 @@ jobs:
           aws ecs register-task-definition --cli-input-json file://taskdef-rendered.json
 
       - name: Update ECS service (or create if it doesn't exist)
-        env:
-          CLUSTER_NAME: party-stories-cluster
-          SERVICE_NAME: party-stories-api
-          TASK_FAMILY: party-stories-task
         run: |
           if aws ecs describe-services --cluster $CLUSTER_NAME --services $SERVICE_NAME | grep "MISSING"; then
             # Service doesn't exist, create it
