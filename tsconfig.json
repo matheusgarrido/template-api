@@ -25,6 +25,7 @@
       "@controllers/*": ["src/controllers/*"],
       "@usecases/*": ["src/usecases/*"],
       "@entities/*": ["src/entities/*"],
+      "@database/*": ["src/infra/db/*"],
       "@infra/*": ["src/infra/*"],
       "@modules/*": ["src/modules/*"],
       "@shared/*": ["src/shared/*"]
