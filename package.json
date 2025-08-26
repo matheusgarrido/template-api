@@ -1,5 +1,5 @@
 {
-  "name": "party-stories-api",
+  "name": "nest-api",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -26,6 +26,8 @@
     "@nestjs/swagger": "^11.2.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
