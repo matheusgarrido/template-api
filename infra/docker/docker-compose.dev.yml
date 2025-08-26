@@ -7,7 +7,7 @@ services:
       dockerfile: ./infra/docker/Dockerfile
     volumes:
       # Sincroniza o código local com o container para hot-reloading
-      - .:/usr/src/app
+      - ../..:/usr/src/app
       # Ignora a pasta node_modules dentro do container
       - /usr/src/app/node_modules
     # Sobrescreve o CMD do Dockerfile para rodar em modo dev
