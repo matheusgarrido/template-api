@@ -1,5 +1,5 @@
 # compiled output
-/aws
+infra/aws
 /dist
 /node_modules
 /scripts

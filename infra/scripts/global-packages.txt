@@ -1,0 +1,6 @@
+@nestjs/cli
+typescript
+ts-node
+nodemon
+yarn
+npm-check-updates

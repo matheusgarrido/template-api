@@ -4,6 +4,7 @@ services:
   api:
     build:
       context: .
+      dockerfile: Dockerfile
       # Não é necessário um target, pois a stage 'production' é a padrão
     ports:
       - '3000:3000'

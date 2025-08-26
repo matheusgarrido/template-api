@@ -1,6 +1,6 @@
 # Define variáveis para os nomes dos arquivos docker-compose
-DOCKER_COMPOSE_PROD = docker-compose.yml
-DOCKER_COMPOSE_DEV = docker-compose.dev.yml
+DOCKER_COMPOSE_PROD = ./infra/docker/docker-compose.yml
+DOCKER_COMPOSE_DEV = ./infra/docker/docker-compose.dev.yml
 
 # Fornece ajuda e documentação sobre os alvos disponíveis
 help:
