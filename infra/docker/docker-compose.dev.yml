@@ -3,7 +3,8 @@ version: '3.8'
 services:
   api:
     build:
-      context: .
+      context: ../..
+      dockerfile: ./infra/docker/Dockerfile
     volumes:
       # Sincroniza o código local com o container para hot-reloading
       - .:/usr/src/app

@@ -7,7 +7,7 @@ FROM node:20 AS builder
 WORKDIR /usr/src/app
 
 # Copiar dependências
-COPY package*.json ./
+COPY ./package*.json ./
 
 # Instalar dependências (inclui devDependencies para poder compilar)
 RUN npm install
@@ -26,7 +26,8 @@ FROM node:20-alpine AS production
 WORKDIR /usr/src/app
 
 # Copiar apenas arquivos de dependências
-COPY package*.json ./
+# COPY package*.json ./
+COPY --from=builder /usr/src/app/package*.json ./
 
 # Instalar dependências sem dev (mais leve)
 RUN npm install --omit=dev
