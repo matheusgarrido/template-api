@@ -31,8 +31,8 @@ class CreateUserDto implements ICreateUserInput {
   password?: string;
 }
 
-@ApiTags('user')
-@Controller('user')
+@ApiTags('User')
+@Controller('users')
 export class CreateUserController extends IController<CreateUserUsecase> {
   constructor(protected readonly usecase: CreateUserUsecase) {
     super(usecase);
@@ -53,11 +53,11 @@ export class CreateUserController extends IController<CreateUserUsecase> {
       },
     },
   })
-  create(@Body() input: I): P {
-    const output = this.usecase.execute(input);
+  async create(@Body() input: I): Promise<P> {
+    const output = await this.usecase.execute(input);
 
     const adapterResponse: P = {
-      id: output as string,
+      id: `${output}`,
     };
 
     return adapterResponse;

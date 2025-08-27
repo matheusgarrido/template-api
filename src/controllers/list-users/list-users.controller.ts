@@ -5,8 +5,8 @@ import { ListUsersUsecase } from '@usecases/list-users/list-users.usecase';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { userMock } from 'src/tests/user.mock';
 
-@ApiTags('user')
-@Controller('user')
+@ApiTags('Users')
+@Controller('users')
 export class ListUsersController extends IController<ListUsersUsecase> {
   constructor(protected readonly usecase: ListUsersUsecase) {
     super(usecase);
@@ -23,12 +23,13 @@ export class ListUsersController extends IController<ListUsersUsecase> {
       },
     },
   })
-  findAll(): P {
-    const output = this.usecase.execute();
+  async findAll(): Promise<P> {
+    const output = await this.usecase.execute();
 
     const adapterResponse: P = {
-      items: output,
-      count: output.length,
+      items: output.data ?? [],
+      count: output.data.length,
+      total: output.total,
     };
 
     return adapterResponse;

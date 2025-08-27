@@ -10,22 +10,22 @@ export interface IUserEntity {
 
 export class User extends Entity<IUserEntity> {
   get name() {
-    return this.$properties.name;
+    return this.properties.name;
   }
 
   get email() {
-    return this.$properties.email;
+    return this.properties.email;
   }
 
   get password() {
-    return this.$properties.password;
+    return this.properties.password;
   }
 
   get createdAt() {
-    return this.$properties.createdAt;
+    return this.properties.createdAt;
   }
 
   get updatedAt() {
-    return this.$properties.updatedAt;
+    return this.properties.updatedAt;
   }
 }

@@ -1,11 +1,33 @@
-export abstract class IRepository<T> {
-  protected list: T[] = [];
+import { Entity } from '@entities/entity';
+import { IModel } from './models.protocol';
 
-  abstract create(obj: Partial<T>): T;
+export interface IRepositoryFindAllResponse<E extends Entity<any>> {
+  data: E[];
+  total: number;
+}
 
-  abstract findById(id: string): T | null;
+export abstract class IRepository<E extends Entity<any>> {
+  // abstract toDomain<M extends IModel<any>>(model: M | void): E | null;
 
-  abstract findOne(obj: Partial<T>): T | null;
+  static toDomain<M extends IModel<any>>(
+    model: M | void | null,
+  ): M['entity'] | null {
+    if (!model) {
+      return null;
+    }
 
-  abstract findAll(): T[];
+    const entity = new Entity(model.properties, model.id);
+
+    return entity;
+  }
+
+  protected list: E[] = [];
+
+  abstract create(obj: Partial<E>): Promise<E | null>;
+
+  abstract findByPk(id: string): Promise<E | null>;
+
+  abstract findOne(obj: Partial<E>): Promise<E | null>;
+
+  abstract findAll(): Promise<IRepositoryFindAllResponse<E>>;
 }

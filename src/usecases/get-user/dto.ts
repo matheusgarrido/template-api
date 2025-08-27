@@ -4,4 +4,4 @@ export interface IGetUserInput {
   id: string;
 }
 
-export type IGetUserOutput = User;
+export type IGetUserOutput = Promise<User>;

@@ -11,7 +11,7 @@ export class CreateUserUsecase extends IUsecase<I, O, G> {
     super(gateway);
   }
 
-  execute(input: I): O {
+  async execute(input: I): O {
     const user = new User({
       name: input.name,
       email: input.email,
@@ -20,7 +20,7 @@ export class CreateUserUsecase extends IUsecase<I, O, G> {
       updatedAt: new Date(),
     });
 
-    const existingUser = this.gateway.userRepository.findOne({
+    const existingUser = await this.gateway.userRepository.findOne({
       email: user.email,
     });
 
@@ -28,8 +28,8 @@ export class CreateUserUsecase extends IUsecase<I, O, G> {
       throw new UserAlreadyExistsError();
     }
 
-    const newUser = this.gateway.userRepository.create(user);
+    const newUser = await this.gateway.userRepository.create(user);
 
-    return newUser.id!;
+    return newUser!.id!;
   }
 }

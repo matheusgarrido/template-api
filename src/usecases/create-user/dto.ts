@@ -6,4 +6,4 @@ export interface ICreateUserInput {
   password?: string;
 }
 
-export type ICreateUserOutput = EntityId;
+export type ICreateUserOutput = Promise<EntityId>;

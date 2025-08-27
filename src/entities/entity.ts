@@ -1,8 +1,8 @@
 export type EntityId = string | number;
 
 export class Entity<EntityProps> {
-  $properties: Partial<EntityProps>;
-  $id: EntityId | undefined;
+  private readonly $properties: Partial<EntityProps>;
+  private readonly $id: EntityId | undefined;
 
   constructor(properties: Partial<EntityProps>, id?: EntityId) {
     console.log('properties partial: ==>', properties);
@@ -12,6 +12,10 @@ export class Entity<EntityProps> {
 
   get id() {
     return this.$id;
+  }
+
+  get properties() {
+    return this.$properties;
   }
 
   toJSON() {

@@ -9,8 +9,8 @@ export class ListUsersUsecase extends IUsecase<I, O, G> {
     super(gateway);
   }
 
-  execute(): O {
-    const users = this.gateway.userRepository.findAll();
+  async execute(): O {
+    const users = await this.gateway.userRepository.findAll();
 
     return users;
   }

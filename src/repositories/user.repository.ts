@@ -1,27 +1,48 @@
-import { User } from '@entities/users.entity';
-import { IRepository } from '@shared/protocols/repository.protocol';
+import { databaseMaster } from '@database/master';
+import { UserModel } from '@database/master/models/main/user.model';
+import { EntityId } from '@entities/entity';
+import { IUserEntity, User } from '@entities/users.entity';
+import {
+  IRepository,
+  IRepositoryFindAllResponse,
+} from '@shared/protocols/repository.protocol';
 
 export class UserRepository extends IRepository<User> {
-  create(user: User): User {
-    const id = (Math.random() * 1000).toString();
-    const newUser = new User(user.$properties, id);
-    this.list.push(newUser);
-    return newUser;
+  async create(user: User) {
+    const model = await databaseMaster.create(UserModel, user.properties);
+    return UserRepository.toDomain(model);
   }
 
-  findById(id: string): User | null {
-    const user = this.list.find((user) => id && user.id === id);
-    return user || null;
+  async findByPk(id: EntityId) {
+    if (!id) {
+      return null;
+    }
+
+    const model = await databaseMaster.findByPk(UserModel, id);
+    return UserRepository.toDomain(model);
   }
 
-  findOne(obj: Partial<User>): User | null {
-    const user = this.list.find((user) => {
-      return Object.keys(obj).every((key) => user[key] === obj[key]);
+  async findOne(attributes: Partial<IUserEntity>) {
+    if (!attributes) {
+      return null;
+    }
+
+    const model = await databaseMaster.findOne(UserModel, {
+      where: attributes,
     });
-    return user || null;
+
+    return UserRepository.toDomain(model);
   }
 
-  findAll(): User[] {
-    return this.list;
+  async findAll(): Promise<IRepositoryFindAllResponse<User>> {
+    const result = await databaseMaster.findAndCountAll(UserModel, {});
+    const entities = result.rows.map((model) =>
+      UserRepository.toDomain(model),
+    ) as User[];
+
+    return {
+      data: entities,
+      total: result.count,
+    };
   }
 }

@@ -7,7 +7,7 @@ const output: P = {
   status: 'ok',
 };
 
-@ApiTags('health')
+@ApiTags('Health Check')
 @Controller('health')
 export class HealthController extends IController<any> {
   @Get()
