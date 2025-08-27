@@ -9,6 +9,7 @@ export const databaseMasterConnections = DatabaseConnections.getInstance(
     port: Number(process.env.DATABASE_PORT),
     username: process.env.DATABASE_USER,
     password: process.env.DATABASE_PSWD,
+    database: process.env.DATABASE_NAME,
     dialect: 'mysql',
   },
   replicaHosts,
