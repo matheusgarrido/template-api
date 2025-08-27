@@ -5,7 +5,12 @@ services:
     build:
       context: ../..
       dockerfile: ./infra/docker/Dockerfile
-      # Não é necessário um target, pois a stage 'production' é a padrão
+    environment:
+      DATABASE_HOST: ${DATABASE_HOST_PROD}
+      DATABASE_PORT: ${DATABASE_PORT_PROD}
+      DATABASE_USER: ${DATABASE_USER_PROD}
+      DATABASE_PSWD: ${DATABASE_PSWD_PROD}
+      DATABASE_NAME: ${DATABASE_NAME}
     ports:
       - '3000:3000'
-    restart: always # Boa prática para produção
+    restart: unless-stopped
