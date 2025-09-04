@@ -18,6 +18,8 @@ services:
       DATABASE_USER: ${DATABASE_USER_DEV}
       DATABASE_PSWD: ${DATABASE_PSWD_DEV}
       DATABASE_NAME: ${DATABASE_NAME}
+    stdin_open: true # Mantém stdin aberto
+    tty: true
     depends_on:
       - mysql_db_dev_service
 

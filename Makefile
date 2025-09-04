@@ -38,6 +38,24 @@ restart:
 sh:
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) exec api sh
 
+stop-all:
+	@echo "Parando containers da API..."
+	-docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) down -v
+	@echo "Verificando containers restantes..."
+	-docker ps -a | grep api | awk '{print $$1}' | xargs -r docker rm -f
+	@echo "Verificando processos Node locais na porta 3000..."
+	-@lsof -i :3000 | awk 'NR>1 {print $$2}' | xargs -r kill -9
+	@echo "Aplicação finalizada."
+
+# ----------------
+# Mata processos Node que estejam usando a porta 3000
+# ----------------
+kill:
+	@echo "Procurando processos Node na porta 3000..."
+	@lsof -i :3000 | awk 'NR>1 {print $$2}' | xargs -r sudo kill -9
+	@echo "Todos os processos Node na porta 3000 foram finalizados."
+
+
 # ----------------
 # Alvos de Build
 # ----------------
