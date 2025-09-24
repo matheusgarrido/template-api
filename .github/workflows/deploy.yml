@@ -5,13 +5,18 @@ on:
     branches:
       - main
 
+env:
+  AWS_REGION: us-east-1
+  CLUSTER_NAME: party-stories-cluster
+  SERVICE_NAME: party-stories-api
+  TASK_FAMILY: party-stories-task
+  ECR_REPOSITORY: party-stories/api
+  DOCKERFILE_PATH: ./infra/docker/Dockerfile
+  NODE_VERSION: '20'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      CLUSTER_NAME: party-stories-cluster
-      SERVICE_NAME: party-stories-api
-      TASK_FAMILY: party-stories-task
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{env.NODE_VERSION}}
 
       - name: Install dependencies and build
         run: |
@@ -31,7 +36,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -39,44 +44,42 @@ jobs:
 
       - name: Build and push Docker image
         env:
-          ECR_REPOSITORY: party-stories/api
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./infra/docker/Dockerfile .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG -f ${{ env.DOCKERFILE_PATH }} .
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
 
       - name: Ensure CloudWatch log group exists
         run: |
-          if ! aws logs describe-log-groups --log-group-name-prefix /ecs/$TASK_FAMILY | grep -q "/ecs/$TASK_FAMILY"; then
-            aws logs create-log-group --log-group-name /ecs/$TASK_FAMILY
+          if ! aws logs describe-log-groups --log-group-name-prefix /ecs/${{ env.TASK_FAMILY }} | grep -q "/ecs/${{ env.TASK_FAMILY }}"; then
+            aws logs create-log-group --log-group-name /ecs/${{ env.TASK_FAMILY }}
           fi
 
       - name: Register new task definition
         id: taskdef
         env:
-          ECR_REPOSITORY: party-stories/api
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          sed "s|<IMAGE>|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" taskdef.json > taskdef-rendered.json
+          sed "s|<IMAGE>|$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG|g" taskdef.json > taskdef-rendered.json
           aws ecs register-task-definition --cli-input-json file://taskdef-rendered.json
 
       - name: Update ECS service (or create if it doesn't exist)
         run: |
-          if aws ecs describe-services --cluster $CLUSTER_NAME --services $SERVICE_NAME | grep "MISSING"; then
+          if aws ecs describe-services --cluster ${{ env.CLUSTER_NAME }} --services ${{ env.SERVICE_NAME }} | grep "MISSING"; then
             # Service doesn't exist, create it
             aws ecs create-service \
-              --cluster $CLUSTER_NAME \
-              --service-name $SERVICE_NAME \
-              --task-definition $TASK_FAMILY \
+              --cluster ${{ env.CLUSTER_NAME }} \
+              --service-name ${{ env.SERVICE_NAME }} \
+              --task-definition ${{ env.TASK_FAMILY }} \
               --desired-count 1 \
               --launch-type FARGATE \
               --network-configuration "awsvpcConfiguration={subnets=[subnet-publica-1,subnet-publica-2],securityGroups=[sg-xxxxx],assignPublicIp=ENABLED}"
           else
             # Service exists, update it
             aws ecs update-service \
-              --cluster $CLUSTER_NAME \
-              --service $SERVICE_NAME \
+              --cluster ${{ env.CLUSTER_NAME }} \
+              --service ${{ env.SERVICE_NAME }} \
               --force-new-deployment
           fi
