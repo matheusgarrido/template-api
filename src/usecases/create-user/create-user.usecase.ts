@@ -24,6 +24,8 @@ export class CreateUserUsecase extends IUsecase<I, O, G> {
       email: user.email,
     });
 
+    this.gateway.logger.info(existingUser);
+
     if (existingUser) {
       throw new UserAlreadyExistsError();
     }

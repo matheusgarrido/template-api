@@ -1,5 +1,6 @@
 import { Entity } from '@entities/entity';
 import { IModel } from './models.protocol';
+import { Logger } from 'nestjs-pino';
 
 export interface IRepositoryFindAllResponse<E extends Entity<any>> {
   data: E[];
@@ -7,6 +8,7 @@ export interface IRepositoryFindAllResponse<E extends Entity<any>> {
 }
 
 export abstract class IRepository<E extends Entity<any>> {
+  constructor(protected readonly logger: Logger) {}
   // abstract toDomain<M extends IModel<any>>(model: M | void): E | null;
 
   static toDomain<M extends IModel<any>>(

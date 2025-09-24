@@ -21,3 +21,9 @@ export abstract class ConflictError extends IError {
     super(message, 409, errorCode);
   }
 }
+
+export abstract class InternalServerError extends IError {
+  constructor(message: string, errorCode: number) {
+    super(message, 500, errorCode);
+  }
+}

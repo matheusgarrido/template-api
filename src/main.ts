@@ -1,20 +1,26 @@
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import createDocument from '@infra/docs';
+// import { Logger } from 'nestjs-pino';
+import { setupGlobalServices } from '@infra/logger/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const isProd = process.env.NODE_ENV === 'production';
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: isProd,
+  });
 
-  const config = new DocumentBuilder()
-    .setTitle('API')
-    .setDescription('API Documentation')
-    .setVersion('1.0')
-    .build();
+  // app.useLogger(app.get(Logger));
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  setupGlobalServices(app);
+  // app.useLogger(new Logger());
 
-  await app.listen(process.env.PORT ?? 3000);
+  const globalPrefix = 'api/v1';
+  app.setGlobalPrefix(globalPrefix);
+
+  createDocument(app);
+
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();

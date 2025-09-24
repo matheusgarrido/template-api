@@ -5,7 +5,6 @@ export class Entity<EntityProps> {
   private readonly $id: EntityId | undefined;
 
   constructor(properties: Partial<EntityProps>, id?: EntityId) {
-    console.log('properties partial: ==>', properties);
     this.$properties = properties || null;
     this.$id = id;
   }

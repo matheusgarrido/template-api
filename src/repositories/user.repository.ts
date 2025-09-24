@@ -9,8 +9,14 @@ import {
 
 export class UserRepository extends IRepository<User> {
   async create(user: User) {
-    const model = await databaseMaster.create(UserModel, user.properties);
-    return UserRepository.toDomain(model);
+    try {
+      const model = await databaseMaster.create(UserModel, user.properties);
+      return UserRepository.toDomain(model);
+    } catch (err) {
+      console.log('err: ==>', err);
+      this.logger.error(err.message);
+      return null;
+    }
   }
 
   async findByPk(id: EntityId) {
