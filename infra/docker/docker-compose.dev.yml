@@ -6,11 +6,9 @@ services:
       context: ../..
       dockerfile: ./infra/docker/Dockerfile
     volumes:
-      # Sincroniza o código local com o container para hot-reloading
       - ../..:/usr/src/app
-      # Ignora a pasta node_modules dentro do container
       - /usr/src/app/node_modules
-    # Sobrescreve o CMD do Dockerfile para rodar em modo dev
+      - /usr/src/app/dist
     command: sh -c "npm install && npm run start:dev"
     environment:
       DATABASE_HOST: ${DATABASE_HOST_DEV}
@@ -18,15 +16,23 @@ services:
       DATABASE_USER: ${DATABASE_USER_DEV}
       DATABASE_PSWD: ${DATABASE_PSWD_DEV}
       DATABASE_NAME: ${DATABASE_NAME}
-    stdin_open: true # Mantém stdin aberto
-    tty: true
+      NODE_ENV: development
     depends_on:
       - mysql_db_dev_service
+    stdin_open: true
+    tty: true
+    restart: no
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+        tag: '{{.Name}}'
 
   mysql_db_dev_service:
     image: mysql:8.0
     container_name: mysql_db_dev
-    restart: unless-stopped
+    restart: no
     environment:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PSWD_DEV}
       MYSQL_DATABASE: ${DATABASE_NAME}
@@ -34,6 +40,11 @@ services:
       - 3307:3306
     volumes:
       - mysql-data-dev:/var/lib/mysql
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
 
 volumes:
   mysql-data-dev:
