@@ -21,6 +21,8 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
+    "noEmitHelpers": true,
+    "importHelpers": true,
     "paths": {
       "@controllers/*": ["src/controllers/*"],
       "@usecases/*": ["src/usecases/*"],
@@ -30,5 +32,10 @@
       "@modules/*": ["src/modules/*"],
       "@shared/*": ["src/shared/*"]
     }
-  }
+  },
+  "include": [
+    "src/**/*",
+    "infra/**/*.js",
+    "infra/database/migrations/20251001180805-create-users.ts"
+  ]
 }

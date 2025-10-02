@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   api:
@@ -23,11 +23,11 @@ services:
     tty: true
     restart: no
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '10m'
-        max-file: '3'
-        tag: '{{.Name}}'
+        max-size: "10m"
+        max-file: "3"
+        tag: "{{.Name}}"
 
   mysql_db_dev_service:
     image: mysql:8.0
@@ -41,10 +41,10 @@ services:
     volumes:
       - mysql-data-dev:/var/lib/mysql
     logging:
-      driver: 'json-file'
+      driver: "json-file"
       options:
-        max-size: '10m'
-        max-file: '3'
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   mysql-data-dev:

@@ -2,6 +2,9 @@
 # DOCKER_COMPOSE_PATH = ./infra/docker
 DOCKER_COMPOSE_PROD = ./infra/docker/docker-compose.yml
 DOCKER_COMPOSE_DEV = ./infra/docker/docker-compose.dev.yml
+DATABASE_CONFIG = ./infra/database/config.js
+DATABASE_MIGRATIONS = ./infra/database/migrations
+DATABASE_SEEDERS = ./infra/database/seeders
 
 # Fornece ajuda e documentação sobre os alvos disponíveis
 help:
@@ -27,6 +30,7 @@ help:
 
 dev:
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) up --build -d
+	$(MAKE) migrate-dev
 
 prod:
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) up --build -d
@@ -139,3 +143,28 @@ status:
 
 clean:
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) down --volumes --rmi all
+
+# ----------------
+# Alvos de Banco de Dados
+# ----------------
+
+migrate-dev:
+	docker compose --env-file ./.env \
+		-f $(DOCKER_COMPOSE_PROD) \
+		-f $(DOCKER_COMPOSE_DEV) \
+		exec api npx ts-node -O '{"module":"CommonJS"}' ./node_modules/.bin/sequelize-cli db:migrate \
+			--migrations-path $(DATABASE_MIGRATIONS) --config $(DATABASE_CONFIG)
+
+migration-undo-dev:
+	docker compose --env-file ./.env \
+		-f $(DOCKER_COMPOSE_PROD) \
+		-f $(DOCKER_COMPOSE_DEV) \
+		exec api npx ts-node -O '{"module":"CommonJS"}' ./node_modules/.bin/sequelize-cli db:migrate:undo \
+			--migrations-path $(DATABASE_MIGRATIONS) --config $(DATABASE_CONFIG)
+
+migration-reset-dev:
+	docker compose --env-file ./.env \
+		-f $(DOCKER_COMPOSE_PROD) \
+		-f $(DOCKER_COMPOSE_DEV) \
+		exec api npx ts-node -O '{"module":"CommonJS"}' ./node_modules/.bin/sequelize-cli db:migrate:undo:all \
+			--migrations-path $(DATABASE_MIGRATIONS) --config $(DATABASE_CONFIG)

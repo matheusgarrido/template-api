@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   api:
@@ -12,5 +12,5 @@ services:
       DATABASE_PSWD: ${DATABASE_PSWD_PROD}
       DATABASE_NAME: ${DATABASE_NAME}
     ports:
-      - '3000:3000'
+      - "3000:3000"
     restart: unless-stopped
