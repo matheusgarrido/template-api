@@ -1,12 +1,14 @@
+import Sequelize from 'sequelize';
 import { databaseMasterConnections } from '@database/master';
 import { IUserEntity, User } from '@entities/users.entity';
 import { IModel } from '@shared/protocols/models.protocol';
-import Sequelize from 'sequelize';
+import { Password } from '@infra/services/password';
 
 export class UserModel extends IModel<User> {
   declare name: string;
   declare email: string;
   declare password: string;
+  declare passwordHash?: string;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
@@ -15,6 +17,7 @@ export class UserModel extends IModel<User> {
       name: this.name,
       email: this.email,
       password: this.password,
+      passwordHash: this.passwordHash,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
@@ -37,6 +40,10 @@ UserModel.init(
       allowNull: false,
     },
     password: {
+      type: Sequelize.VIRTUAL,
+      allowNull: false,
+    },
+    passwordHash: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -60,5 +67,10 @@ UserModel.init(
     timestamps: true,
     underscored: true,
     paranoid: true,
+    hooks: {
+      beforeValidate: async (user) => {
+        user.passwordHash = await Password.generateHash(user.password);
+      },
+    },
   },
 );

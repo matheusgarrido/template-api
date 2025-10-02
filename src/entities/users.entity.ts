@@ -4,6 +4,7 @@ export interface IUserEntity {
   name?: string;
   email?: string;
   password?: string;
+  passwordHash?: string;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -20,6 +21,10 @@ export class User extends Entity<IUserEntity> {
 
   get password() {
     return this.properties.password;
+  }
+
+  get passwordHash() {
+    return this.properties.passwordHash;
   }
 
   get createdAt() {
