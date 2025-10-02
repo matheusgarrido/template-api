@@ -6,6 +6,7 @@ export interface IUserEntity {
   password?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  deletedAt?: Date;
 }
 
 export class User extends Entity<IUserEntity> {
@@ -27,5 +28,9 @@ export class User extends Entity<IUserEntity> {
 
   get updatedAt() {
     return this.properties.updatedAt;
+  }
+
+  get deletedAt() {
+    return this.properties.deletedAt;
   }
 }
