@@ -19,7 +19,7 @@ export class ListUsersController extends IController<ListUsersUsecase> {
     description: 'User',
     schema: {
       example: {
-        items: [userMock],
+        items: [userMock.toSafeJSON()],
       },
     },
   })

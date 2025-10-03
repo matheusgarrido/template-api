@@ -31,7 +31,7 @@ class CreateUserDto implements ICreateUserInput {
   password?: string;
 }
 
-@ApiTags('User')
+@ApiTags('Users')
 @Controller('users')
 export class CreateUserController extends IController<CreateUserUsecase> {
   constructor(protected readonly usecase: CreateUserUsecase) {
@@ -49,7 +49,7 @@ export class CreateUserController extends IController<CreateUserUsecase> {
     description: 'User created successfully',
     schema: {
       example: {
-        id: '123',
+        id: userMock.id,
       },
     },
   })

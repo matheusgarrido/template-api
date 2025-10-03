@@ -1,5 +1,5 @@
-import { User } from '@entities/users.entity';
+import { SafeUser } from '@entities/users.entity';
 
 export interface IGetUserPresenter {
-  user: User;
+  user: SafeUser;
 }

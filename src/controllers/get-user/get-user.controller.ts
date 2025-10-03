@@ -5,7 +5,7 @@ import { GetUserUsecase } from '@usecases/get-user/get-user.usecase';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { userMock } from 'src/tests/user.mock';
 
-@ApiTags('User')
+@ApiTags('Users')
 @Controller('users')
 export class GetUserController extends IController<GetUserUsecase> {
   constructor(protected readonly usecase: GetUserUsecase) {
@@ -25,7 +25,7 @@ export class GetUserController extends IController<GetUserUsecase> {
     description: 'User',
     schema: {
       example: {
-        user: userMock,
+        user: userMock.toSafeJSON(),
       },
     },
   })
@@ -33,7 +33,7 @@ export class GetUserController extends IController<GetUserUsecase> {
     const output = await this.usecase.execute({ id });
 
     const adapterResponse: P = {
-      user: output,
+      user: output.toSafeJSON(),
     };
 
     return adapterResponse;
