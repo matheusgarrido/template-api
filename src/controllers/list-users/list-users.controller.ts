@@ -1,5 +1,5 @@
 import { Controller, Get, HttpCode } from '@nestjs/common';
-import type { IGetUserPresenter as P } from './adapter';
+import type { IListUserPresenter as P } from './adapter';
 import { IController } from '@shared/protocols/controller.protocol';
 import { ListUsersUsecase } from '@usecases/list-users/list-users.usecase';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -27,7 +27,7 @@ export class ListUsersController extends IController<ListUsersUsecase> {
     const output = await this.usecase.execute();
 
     const adapterResponse: P = {
-      items: output.data ?? [],
+      items: output.data.map((o) => o.toSafeJSON()) ?? [],
       count: output.data.length,
       total: output.total,
     };

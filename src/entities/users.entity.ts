@@ -38,4 +38,14 @@ export class User extends Entity<IUserEntity> {
   get deletedAt() {
     return this.properties.deletedAt;
   }
+
+  toSafeJSON() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, passwordHash, ...safeProperties } = this
+      .properties as any;
+    return {
+      ...safeProperties,
+      id: this.id,
+    };
+  }
 }

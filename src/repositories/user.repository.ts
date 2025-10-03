@@ -8,10 +8,14 @@ import {
 } from '@shared/protocols/repository.protocol';
 
 export class UserRepository extends IRepository<User> {
+  protected get EntityClass() {
+    return User;
+  }
+
   async create(user: User) {
     try {
       const model = await databaseMaster.create(UserModel, user.properties);
-      return UserRepository.toDomain(model);
+      return this.toDomain(model);
     } catch (err) {
       console.log('err: ==>', err);
       this.logger.error(err.message);
@@ -25,7 +29,7 @@ export class UserRepository extends IRepository<User> {
     }
 
     const model = await databaseMaster.findByPk(UserModel, id);
-    return UserRepository.toDomain(model);
+    return this.toDomain(model);
   }
 
   async findOne(attributes: Partial<IUserEntity>) {
@@ -37,14 +41,12 @@ export class UserRepository extends IRepository<User> {
       where: attributes,
     });
 
-    return UserRepository.toDomain(model);
+    return this.toDomain(model);
   }
 
   async findAll(): Promise<IRepositoryFindAllResponse<User>> {
     const result = await databaseMaster.findAndCountAll(UserModel, {});
-    const entities = result.rows.map((model) =>
-      UserRepository.toDomain(model),
-    ) as User[];
+    const entities = result.rows.map((model) => this.toDomain(model)) as User[];
 
     return {
       data: entities,

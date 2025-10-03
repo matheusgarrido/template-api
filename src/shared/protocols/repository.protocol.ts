@@ -9,21 +9,21 @@ export interface IRepositoryFindAllResponse<E extends Entity<any>> {
 
 export abstract class IRepository<E extends Entity<any>> {
   constructor(protected readonly logger: Logger) {}
-  // abstract toDomain<M extends IModel<any>>(model: M | void): E | null;
 
-  static toDomain<M extends IModel<any>>(
-    model: M | void | null,
-  ): M['entity'] | null {
+  protected abstract get EntityClass(): new (
+    properties: Partial<E['properties']>,
+    id?: E['id'],
+  ) => E;
+
+  toDomain<M extends IModel<any>>(model: M | void | null): M['entity'] | null {
     if (!model) {
       return null;
     }
 
-    const entity = new Entity(model.properties, model.id);
+    const entity = new this.EntityClass(model.properties, model.id);
 
     return entity;
   }
-
-  protected list: E[] = [];
 
   abstract create(obj: Partial<E>): Promise<E | null>;
 
