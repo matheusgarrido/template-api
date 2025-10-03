@@ -3,8 +3,7 @@ import { DatabaseRouter } from '../router';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// import * as databaseConfig from '../../../../infra/database/config';
-import databaseConfig from '../../../../infra/database/config';
+import databaseConfig from '@project/infra/database/config';
 import { Dialect } from 'sequelize';
 
 const replicaHosts = process.env.DATABASE_READ_REPLICA_HOSTS;

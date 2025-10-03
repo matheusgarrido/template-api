@@ -24,6 +24,7 @@
     "noEmitHelpers": true,
     "importHelpers": true,
     "paths": {
+      "@project/*": ["./*"],
       "@controllers/*": ["src/controllers/*"],
       "@usecases/*": ["src/usecases/*"],
       "@entities/*": ["src/entities/*"],
