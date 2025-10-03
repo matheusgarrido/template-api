@@ -11,6 +11,11 @@ export abstract class IError extends Error {
   }
 }
 
+export abstract class UnauthorizedError extends IError {
+  constructor(message: string, errorCode: number) {
+    super(message, 401, errorCode);
+  }
+}
 export abstract class NotFoundError extends IError {
   constructor(message: string, errorCode: number) {
     super(message, 404, errorCode);

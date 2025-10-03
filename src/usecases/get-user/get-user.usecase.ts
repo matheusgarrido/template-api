@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IGetUserInput as I, IGetUserOutput as O } from './dto';
 import { IGetUserGateway as G } from './gateway';
 import { IUsecase } from '@shared/protocols/usecase.protocol';
-import { UserNotFoundError } from '@shared/errors/not-found';
+import { UserNotFoundError } from '@shared/errors';
 
 @Injectable()
 export class GetUserUsecase extends IUsecase<I, O, G> {

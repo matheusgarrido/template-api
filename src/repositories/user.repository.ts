@@ -53,4 +53,24 @@ export class UserRepository extends IRepository<User> {
       total: result.count,
     };
   }
+
+  async update(
+    user: Partial<User>,
+    returnObject: boolean = true,
+  ): Promise<User | boolean | null> {
+    console.log('user: ==>', user);
+    const [affectedCount] = await databaseMaster.update(
+      UserModel,
+      user.properties,
+      {
+        where: { id: user.id },
+      },
+    );
+
+    if (returnObject) {
+      return await this.findByPk(user.id!);
+    }
+
+    return affectedCount > 0;
+  }
 }

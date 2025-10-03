@@ -2,15 +2,15 @@ import { Module } from '@nestjs/common';
 
 import { UserRepository } from 'src/repositories/user.repository';
 
-import * as CreateUser from '@usecases/create-user';
-import * as GetUser from '@usecases/get-user';
-import * as ListUsers from '@usecases/list-users';
+import * as Login from '@usecases/auth-login';
 import { ModuleBuilder } from '@shared/handler/module-builder';
+import { PasswordService, TokenService } from '@infra/services';
 
 const moduleMetadata = new ModuleBuilder(
-  [CreateUser, GetUser, ListUsers],
+  [Login],
   [UserRepository],
+  [TokenService, PasswordService],
 );
 
 @Module(moduleMetadata.metadata)
-export class UsersModule {}
+export class AuthModule {}

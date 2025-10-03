@@ -32,4 +32,9 @@ export abstract class IRepository<E extends Entity<any>> {
   abstract findOne(obj: Partial<E>): Promise<E | null>;
 
   abstract findAll(): Promise<IRepositoryFindAllResponse<E>>;
+
+  abstract update(
+    obj: Partial<E>,
+    returnObject: boolean,
+  ): Promise<E | boolean | null>;
 }

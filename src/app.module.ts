@@ -1,17 +1,16 @@
 import { Module } from '@nestjs/common';
-import { LoggerModule } from 'nestjs-pino';
-import { UsersModule } from '@modules/users.module';
-import { HealthModule } from '@modules/health.module';
-import { AppService } from './app.service';
 import { APP_FILTER } from '@nestjs/core';
+import { LoggerModule } from 'nestjs-pino';
+import { AppService } from './app.service';
 import { AllExceptionsFilter } from '@infra/logger/all-exceptions.filter';
+import * as modules from '@infra/modules';
+import * as services from '@infra/services';
 
 const redact = ['req.headers', 'req.remoteAddress', 'res.headers'];
 
 @Module({
   imports: [
-    UsersModule,
-    HealthModule,
+    ...Object.values(modules),
     LoggerModule.forRoot({
       pinoHttp: {
         transport: { target: 'pino-pretty' },
@@ -26,6 +25,7 @@ const redact = ['req.headers', 'req.remoteAddress', 'res.headers'];
   ],
   providers: [
     AppService,
+    ...Object.values(services),
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,

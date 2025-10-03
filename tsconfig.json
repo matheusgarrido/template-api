@@ -29,8 +29,9 @@
       "@entities/*": ["src/entities/*"],
       "@database/*": ["src/infra/db/*"],
       "@infra/*": ["src/infra/*"],
-      "@modules/*": ["src/modules/*"],
-      "@shared/*": ["src/shared/*"]
+      "@modules/*": ["src/infra/modules/*"],
+      "@shared/*": ["src/shared/*"],
+      "@tests/*": ["src/tests/*"]
     }
   },
   "include": [

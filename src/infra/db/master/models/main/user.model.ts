@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import { databaseMasterConnections } from '@database/master';
 import { IUserEntity, User } from '@entities/users.entity';
 import { IModel } from '@shared/protocols/models.protocol';
-import { Password } from '@infra/services/password';
+import { PasswordService } from '@infra/services/password.service';
 
 export class UserModel extends IModel<User> {
   declare name: string;
@@ -69,7 +69,8 @@ UserModel.init(
     paranoid: true,
     hooks: {
       beforeValidate: async (user) => {
-        user.passwordHash = await Password.generateHash(user.password);
+        const passwordService = new PasswordService();
+        user.passwordHash = await passwordService.generateHash(user.password);
       },
     },
   },

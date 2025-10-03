@@ -3,7 +3,7 @@ import { ICreateUserInput as I, ICreateUserOutput as O } from './dto';
 import { ICreateUserGateway as G } from './gateway';
 import { IUsecase } from '@shared/protocols/usecase.protocol';
 import { Inject, Injectable } from '@nestjs/common';
-import { UserAlreadyExistsError } from '@shared/errors/conflict';
+import { UserAlreadyExistsError } from '@shared/errors';
 
 @Injectable()
 export class CreateUserUsecase extends IUsecase<I, O, G> {
@@ -16,8 +16,6 @@ export class CreateUserUsecase extends IUsecase<I, O, G> {
       name: input.name,
       email: input.email,
       password: input.password,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
 
     const existingUser = await this.gateway.userRepository.findOne({
