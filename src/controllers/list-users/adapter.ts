@@ -1,7 +1,7 @@
-import { User } from '@entities/users.entity';
+import { SafeUser } from '@entities/users.entity';
 
 export interface IListUserPresenter {
-  items: Omit<User, 'passwordHash' | 'password'>[];
+  items: SafeUser[];
   count: number;
   total: number;
 }

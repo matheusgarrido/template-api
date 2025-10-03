@@ -10,6 +10,8 @@ export interface IUserEntity {
   deletedAt?: Date;
 }
 
+export type SafeUser = Omit<User, 'passwordHash' | 'password'>;
+
 export class User extends Entity<IUserEntity> {
   get name() {
     return this.properties.name;
@@ -39,7 +41,7 @@ export class User extends Entity<IUserEntity> {
     return this.properties.deletedAt;
   }
 
-  toSafeJSON() {
+  toSafeJSON(): SafeUser {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, passwordHash, ...safeProperties } = this
       .properties as any;
