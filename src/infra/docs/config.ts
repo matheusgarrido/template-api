@@ -15,8 +15,19 @@ export abstract class ApiDocumentConfig {
   constructor(apiDocumentConfig: IApiDocument) {
     let builder: DocumentBuilder = new DocumentBuilder()
       .setTitle(apiDocumentConfig.title)
-      .setVersion(apiDocumentConfig.version);
-
+      .setVersion(apiDocumentConfig.version)
+      .addBearerAuth(
+        {
+          description: 'JWT Token',
+          name: 'Authorization',
+          bearerFormat: 'JWT',
+          scheme: 'bearer',
+          type: 'http',
+          in: 'header',
+        },
+        'authorization',
+      );
+    // .addSecurityRequirements('authorization', []);
     if (apiDocumentConfig.description)
       builder = builder.setDescription(apiDocumentConfig.description);
 

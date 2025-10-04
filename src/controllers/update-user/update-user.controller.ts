@@ -6,7 +6,13 @@ import {
   Patch,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiBody, ApiResponse, ApiProperty } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBody,
+  ApiResponse,
+  ApiProperty,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import type {
   IUpdateUserInput,
   IUpdateUserInputBody,
@@ -51,6 +57,7 @@ export class UpdateUserController extends IController<UpdateUserUsecase> {
 
   @Patch(':id')
   @HttpCode(200)
+  @ApiBearerAuth('authorization')
   @ApiBody({
     type: UpdateUserDto,
     description: 'User data do be updated',

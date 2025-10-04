@@ -2,7 +2,7 @@ import { Controller, Get, HttpCode, Param, UseGuards } from '@nestjs/common';
 import type { IGetUserPresenter as P } from './adapter';
 import { IController } from '@shared/protocols/controller.protocol';
 import { GetUserUsecase } from '@usecases/get-user/get-user.usecase';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { userMock } from 'src/tests/user.mock';
 import { AuthGuard } from '@infra/guards/auth.guard';
 import { CurrentUser } from '@shared/decorators';
@@ -17,6 +17,7 @@ export class GetUserController extends IController<GetUserUsecase> {
 
   @Get(':id')
   @HttpCode(200)
+  @ApiBearerAuth('authorization')
   @ApiParam({
     name: 'id',
     description: 'User ID to be found',
