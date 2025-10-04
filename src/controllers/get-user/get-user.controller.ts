@@ -1,11 +1,14 @@
-import { Controller, Get, HttpCode, Param } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, UseGuards } from '@nestjs/common';
 import type { IGetUserPresenter as P } from './adapter';
 import { IController } from '@shared/protocols/controller.protocol';
 import { GetUserUsecase } from '@usecases/get-user/get-user.usecase';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { userMock } from 'src/tests/user.mock';
+import { AuthGuard } from '@infra/guards/auth.guard';
+import { CurrentUser } from '@shared/decorators';
 
 @ApiTags('Users')
+@UseGuards(AuthGuard)
 @Controller('users')
 export class GetUserController extends IController<GetUserUsecase> {
   constructor(protected readonly usecase: GetUserUsecase) {
@@ -29,8 +32,11 @@ export class GetUserController extends IController<GetUserUsecase> {
       },
     },
   })
-  async findOne(@Param('id') id: string): Promise<P> {
-    const output = await this.usecase.execute({ id });
+  async findOne(
+    @Param('id') id: string,
+    @CurrentUser() currentUser: CurrentUser,
+  ): Promise<P> {
+    const output = await this.usecase.execute({ id, currentUser });
 
     const adapterResponse: P = {
       user: output.toSafeJSON(),

@@ -1,22 +1,25 @@
-import { Body, Controller, HttpCode, Param, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags, ApiBody, ApiResponse, ApiProperty } from '@nestjs/swagger';
 import type {
-  IUpdateUserInput as I,
   IUpdateUserInput,
+  IUpdateUserInputBody,
 } from '@usecases/update-user/dto';
 import type { UpdateUserPresenter as P } from './adapter';
 import { UpdateUserUsecase } from '@usecases/update-user/update-user.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
-import type { EntityId } from '@entities/entity';
 import { userMock } from '@tests/user.mock';
+import { AuthGuard } from '@infra/guards/auth.guard';
+import { CurrentUser } from '@shared/decorators';
 
+// @ts-expect-error Guard
 class UpdateUserDto implements IUpdateUserInput {
-  @ApiProperty({
-    description: 'The id of the user',
-    example: userMock.id,
-  })
-  id: EntityId;
-
   @ApiProperty({
     description: 'The name of the user',
     example: userMock.name,
@@ -39,6 +42,7 @@ class UpdateUserDto implements IUpdateUserInput {
 }
 
 @ApiTags('Users')
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UpdateUserController extends IController<UpdateUserUsecase> {
   constructor(protected readonly usecase: UpdateUserUsecase) {
@@ -60,8 +64,18 @@ export class UpdateUserController extends IController<UpdateUserUsecase> {
       },
     },
   })
-  async update(@Body() input: I, @Param('id') id: string): Promise<P> {
-    const output = await this.usecase.execute({ ...input, id });
+  async update(
+    @Body() input: IUpdateUserInputBody,
+    @Param('id') id: string,
+    @CurrentUser() currentUser: CurrentUser,
+  ): Promise<P> {
+    const output = await this.usecase.execute({
+      id,
+      currentUser,
+      email: input.email,
+      name: input.name,
+      password: input.password,
+    });
 
     const adapterResponse: P = {
       id: `${output}`,

@@ -1,8 +1,9 @@
 import { User } from '@entities/users.entity';
+import { CurrentUser } from '@shared/decorators';
 import { IRepositoryFindAllResponse } from '@shared/protocols/repository.protocol';
 
-export interface IGetUserInput {
-  id: string;
+export interface IListUserInput {
+  currentUser: CurrentUser;
 }
 
-export type IGetUserOutput = Promise<IRepositoryFindAllResponse<User>>;
+export type IListUserOutput = Promise<IRepositoryFindAllResponse<User>>;

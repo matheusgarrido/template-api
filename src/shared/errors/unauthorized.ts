@@ -5,3 +5,9 @@ export class InvalidUserCredentialsError extends UnauthorizedError {
     super('invalid-user-credentials', 1);
   }
 }
+
+export class InvalidTokenAccessError extends UnauthorizedError {
+  constructor() {
+    super('invalid-token-access', 2);
+  }
+}

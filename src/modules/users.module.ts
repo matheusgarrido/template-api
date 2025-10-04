@@ -9,8 +9,11 @@ import * as UpdateUser from '@usecases/update-user';
 import { ModuleBuilder } from '@shared/handler/module-builder';
 
 const moduleMetadata = new ModuleBuilder(
+  'users',
   [CreateUser, GetUser, ListUsers, UpdateUser],
-  [UserRepository],
+  {
+    Repositories: [UserRepository],
+  },
 );
 
 @Module(moduleMetadata.metadata)

@@ -13,7 +13,7 @@ export class GetUserUsecase extends IUsecase<I, O, G> {
   async execute(input: I): O {
     const user = await this.gateway.userRepository.findByPk(input.id);
 
-    if (!user) {
+    if (!user || input.currentUser.id !== +input.id) {
       throw new UserNotFoundError();
     }
 

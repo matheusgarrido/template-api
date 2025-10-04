@@ -12,18 +12,14 @@ export class UpdateUserUsecase extends IUsecase<I, O, G> {
   }
 
   async execute(input: I): O {
-    const [existingUser, usedEmail] = await Promise.all([
-      this.gateway.userRepository.findByPk(input.id),
-      this.gateway.userRepository.findOne({ email: input.email }),
-    ]);
-
-    this.gateway.logger.info(existingUser);
-
-    if (!existingUser) {
+    if (!input.currentUser.id || input.currentUser.id !== +input.id) {
       throw new UserNotFoundError();
     }
 
-    if (usedEmail && usedEmail.id !== input.id) {
+    const usedEmail = await this.gateway.userRepository.findOne({
+      email: input.email,
+    });
+    if (usedEmail && usedEmail.id !== +input.id) {
       throw new UserEmailAlreadyUsedError();
     }
 

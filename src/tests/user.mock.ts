@@ -1,5 +1,6 @@
 import { IUserEntity, User } from '@entities/users.entity';
 import { dateCurrentMock } from './default.mock';
+import { CurrentUser } from '@shared/decorators';
 
 export const userMockData: IUserEntity = {
   email: 'joao@example.com',
@@ -10,3 +11,9 @@ export const userMockData: IUserEntity = {
 };
 
 export const userMock = new User(userMockData, '1');
+
+export const currentUserMock: CurrentUser = {
+  ...userMock.toSafeJSON(),
+  iat: dateCurrentMock.getTime(),
+  exp: dateCurrentMock.getTime() * 24 * 60 * 60 * 1000,
+};

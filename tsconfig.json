@@ -24,13 +24,13 @@
     "noEmitHelpers": true,
     "importHelpers": true,
     "paths": {
-      "@project/*": ["./*"],
+      "@project/infra/*": ["infra/*"],
       "@controllers/*": ["src/controllers/*"],
       "@usecases/*": ["src/usecases/*"],
       "@entities/*": ["src/entities/*"],
       "@database/*": ["src/infra/db/*"],
       "@infra/*": ["src/infra/*"],
-      "@modules/*": ["src/infra/modules/*"],
+      "@modules/*": ["src/modules/*"],
       "@shared/*": ["src/shared/*"],
       "@tests/*": ["src/tests/*"]
     }

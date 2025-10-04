@@ -1,6 +1,7 @@
 import { EntityId } from '@entities/entity';
 import { SafeUser } from '@entities/users.entity';
-import { InvalidUserCredentialsError } from '@shared/errors/unauthorized';
+import { CurrentUser } from '@shared/decorators';
+import { InvalidTokenAccessError } from '@shared/errors/unauthorized';
 import jwt from 'jsonwebtoken';
 
 interface ITokenInput extends Partial<SafeUser> {
@@ -17,13 +18,13 @@ export class TokenService {
     return token;
   }
 
-  verify(token?: string): SafeUser {
-    if (!token) throw new InvalidUserCredentialsError();
+  verify(token?: string): CurrentUser {
+    if (!token) throw new InvalidTokenAccessError();
     try {
-      const payload = jwt.verify(token, this.secret) as SafeUser;
+      const payload = jwt.verify(token, this.secret) as CurrentUser;
       return payload;
     } catch {
-      throw new InvalidUserCredentialsError();
+      throw new InvalidTokenAccessError();
     }
   }
 }

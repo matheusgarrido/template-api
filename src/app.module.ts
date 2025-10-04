@@ -3,7 +3,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { AppService } from './app.service';
 import { AllExceptionsFilter } from '@infra/logger/all-exceptions.filter';
-import * as modules from '@infra/modules';
+import * as modules from '@modules/index';
 import * as services from '@infra/services';
 
 const redact = ['req.headers', 'req.remoteAddress', 'res.headers'];
