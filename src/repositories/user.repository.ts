@@ -73,4 +73,13 @@ export class UserRepository extends IRepository<User> {
 
     return affectedCount > 0;
   }
+
+  async remove(user: Partial<User>): Promise<boolean> {
+    console.log('user: ==>', user);
+    const deleted = await databaseMaster.destroy(UserModel, {
+      where: { id: user.id },
+    });
+
+    return !!deleted;
+  }
 }

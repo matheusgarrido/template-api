@@ -37,4 +37,6 @@ export abstract class IRepository<E extends Entity<any>> {
     obj: Partial<E>,
     returnObject: boolean,
   ): Promise<E | boolean | null>;
+
+  abstract remove(obj: Partial<E>): Promise<boolean>;
 }
