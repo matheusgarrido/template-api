@@ -4,10 +4,6 @@ import { IController } from '@shared/protocols/controller.protocol';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { HealthCheckUsecase } from '@usecases/health-check/health-check.usecase';
 
-const output: P = {
-  status: 'ok',
-};
-
 @ApiTags('Health Check')
 @Controller('health')
 export class HealthCheckController extends IController<HealthCheckUsecase> {
@@ -21,7 +17,9 @@ export class HealthCheckController extends IController<HealthCheckUsecase> {
     status: 200,
     description: 'Health Check',
     schema: {
-      example: output,
+      example: {
+        status: 'ok',
+      } as P,
     },
   })
   async create(): Promise<P> {

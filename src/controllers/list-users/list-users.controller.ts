@@ -20,7 +20,7 @@ export class ListUsersController extends IController<ListUsersUsecase> {
     schema: {
       example: {
         items: [userMock.toSafeJSON()],
-      },
+      } as P,
     },
   })
   async findAll(): Promise<P> {

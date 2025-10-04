@@ -44,7 +44,7 @@ export class AuthLoginController extends IController<AuthLoginUsecase> {
     schema: {
       example: {
         token: 'access_token',
-      },
+      } as P,
     },
   })
   async authlogin(@Body() input: I): Promise<P> {

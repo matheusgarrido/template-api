@@ -68,7 +68,7 @@ export class UpdateUserController extends IController<UpdateUserUsecase> {
     schema: {
       example: {
         id: userMock.id,
-      },
+      } as P,
     },
   })
   async update(

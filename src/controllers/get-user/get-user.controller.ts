@@ -30,7 +30,7 @@ export class GetUserController extends IController<GetUserUsecase> {
     schema: {
       example: {
         user: userMock.toSafeJSON(),
-      },
+      } as P,
     },
   })
   async findOne(

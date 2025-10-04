@@ -7,7 +7,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import type { IRemoveUserInputBody } from '@usecases/remove-user/dto';
 import type { RemoveUserPresenter as P } from './adapter';
 import { RemoveUserUsecase } from '@usecases/remove-user/remove-user.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
@@ -37,7 +36,6 @@ export class RemoveUserController extends IController<RemoveUserUsecase> {
     },
   })
   async remove(
-    @Body() input: IRemoveUserInputBody,
     @Param('id') id: string,
     @CurrentUser() currentUser: CurrentUser,
   ): Promise<P> {

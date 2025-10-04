@@ -50,7 +50,7 @@ export class CreateUserController extends IController<CreateUserUsecase> {
     schema: {
       example: {
         id: userMock.id,
-      },
+      } as P,
     },
   })
   async create(@Body() input: I): Promise<P> {
