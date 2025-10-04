@@ -43,7 +43,7 @@ export class AuthLoginController extends IController<AuthLoginUsecase> {
     description: 'User logged successfully',
     schema: {
       example: {
-        id: userMock.id,
+        token: 'access_token',
       },
     },
   })
