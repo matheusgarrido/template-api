@@ -63,16 +63,21 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           sed "s|<IMAGE>|$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG|g" taskdef.json > taskdef-rendered.json
+          TASK_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://taskdef-rendered.json | jq -r '.taskDefinition.taskDefinitionArn')
+          echo "task_definition_arn=$TASK_DEF_ARN" >> $GITHUB_OUTPUT 
+
           aws ecs register-task-definition --cli-input-json file://taskdef-rendered.json
 
       - name: Update ECS service (or create if it doesn't exist)
         run: |
+          NEW_TASK_DEF_ARN="${{ steps.taskdef.outputs.task_definition_arn }}"
+
           if aws ecs describe-services --cluster ${{ env.CLUSTER_NAME }} --services ${{ env.SERVICE_NAME }} | grep "MISSING"; then
             # Service doesn't exist, create it
             aws ecs create-service \
               --cluster ${{ env.CLUSTER_NAME }} \
               --service-name ${{ env.SERVICE_NAME }} \
-              --task-definition ${{ env.TASK_FAMILY }} \
+              --task-definition $NEW_TASK_DEF_ARN \
               --desired-count 1 \
               --launch-type FARGATE \
               --network-configuration "awsvpcConfiguration={subnets=[subnet-publica-1,subnet-publica-2],securityGroups=[sg-xxxxx],assignPublicIp=ENABLED}"
@@ -81,5 +86,6 @@ jobs:
             aws ecs update-service \
               --cluster ${{ env.CLUSTER_NAME }} \
               --service ${{ env.SERVICE_NAME }} \
+              --task-definition $NEW_TASK_DEF_ARN \
               --force-new-deployment
           fi
