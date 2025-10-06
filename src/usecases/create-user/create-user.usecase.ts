@@ -1,4 +1,4 @@
-import { User } from 'src/entities/users.entity';
+import { User } from '@entities/user.entity';
 import { ICreateUserInput as I, ICreateUserOutput as O } from './dto';
 import { ICreateUserGateway as G } from './gateway';
 import { IUsecase } from '@shared/protocols/usecase.protocol';

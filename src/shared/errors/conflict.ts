@@ -11,3 +11,9 @@ export class UserEmailAlreadyUsedError extends ConflictError {
     super('user-email-already-used', 2);
   }
 }
+
+export class GroupAlreadyExistsError extends ConflictError {
+  constructor() {
+    super('group-already-exists', 2);
+  }
+}

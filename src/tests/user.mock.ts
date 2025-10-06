@@ -1,4 +1,4 @@
-import { IUserEntity, User } from '@entities/users.entity';
+import { IUserEntity, User } from '@entities/user.entity';
 import { dateCurrentMock } from './default.mock';
 import { CurrentUser } from '@shared/decorators';
 

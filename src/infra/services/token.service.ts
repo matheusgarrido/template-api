@@ -1,5 +1,5 @@
 import { EntityId } from '@entities/entity';
-import { SafeUser } from '@entities/users.entity';
+import { SafeUser } from '@entities/user.entity';
 import { CurrentUser } from '@shared/decorators';
 import { InvalidTokenAccessError } from '@shared/errors/unauthorized';
 import jwt from 'jsonwebtoken';

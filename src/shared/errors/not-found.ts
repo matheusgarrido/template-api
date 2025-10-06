@@ -5,3 +5,9 @@ export class UserNotFoundError extends NotFoundError {
     super('user-not-found', 1);
   }
 }
+
+export class GroupNotFoundError extends NotFoundError {
+  constructor() {
+    super('group-not-found', 2);
+  }
+}

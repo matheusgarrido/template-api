@@ -1,30 +1,26 @@
 import Sequelize from 'sequelize';
 import { databaseMasterConnections } from '@database/master';
-import { IUserEntity, User } from '@entities/user.entity';
+import { IGroupEntity, Group } from '@entities/group.entity';
 import { IModel } from '@shared/protocols/models.protocol';
-import { PasswordService } from '@infra/services/password.service';
 
-export class UserModel extends IModel<User> {
+export class GroupModel extends IModel<Group> {
   declare name: string;
-  declare email: string;
-  declare password: string;
-  declare passwordHash?: string;
+  declare description?: string;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
+  declare readonly deletedAt: Date;
 
-  get properties(): IUserEntity {
+  get properties(): IGroupEntity {
     return {
       name: this.name,
-      email: this.email,
-      password: this.password,
-      passwordHash: this.passwordHash,
+
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
   }
 }
 
-UserModel.init(
+GroupModel.init(
   {
     id: {
       type: Sequelize.BIGINT.UNSIGNED,
@@ -35,15 +31,7 @@ UserModel.init(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    email: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    password: {
-      type: Sequelize.VIRTUAL,
-      allowNull: false,
-    },
-    passwordHash: {
+    description: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -62,16 +50,10 @@ UserModel.init(
   },
   {
     sequelize: databaseMasterConnections.master,
-    modelName: 'user',
-    tableName: 'users',
+    modelName: 'group',
+    tableName: 'groups',
     timestamps: true,
     underscored: true,
     paranoid: true,
-    hooks: {
-      beforeValidate: async (user) => {
-        const passwordService = new PasswordService();
-        user.passwordHash = await passwordService.generateHash(user.password);
-      },
-    },
   },
 );

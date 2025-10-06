@@ -1,4 +1,4 @@
-import { User } from '@entities/users.entity';
+import { User } from '@entities/user.entity';
 import bcrypt from 'bcryptjs';
 
 export class PasswordService {

@@ -1,7 +1,7 @@
 import { databaseMaster } from '@database/master';
 import { UserModel } from '@database/master/models/main/user.model';
 import { EntityId } from '@entities/entity';
-import { IUserEntity, User } from '@entities/users.entity';
+import { IUserEntity, User } from '@entities/user.entity';
 import {
   IRepository,
   IRepositoryFindAllResponse,

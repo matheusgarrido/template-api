@@ -1,4 +1,4 @@
-import { User } from 'src/entities/users.entity';
+import { User } from '@entities/user.entity';
 import { IUpdateUserInput as I, IUpdateUserOutput as O } from './dto';
 import { IUpdateUserGateway as G } from './gateway';
 import { IUsecase } from '@shared/protocols/usecase.protocol';

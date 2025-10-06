@@ -1,4 +1,4 @@
-import { User } from '@entities/users.entity';
+import { User } from '@entities/user.entity';
 import { CurrentUser } from '@shared/decorators';
 import { IRepositoryFindAllResponse } from '@shared/protocols/repository.protocol';
 

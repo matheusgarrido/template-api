@@ -1,4 +1,4 @@
-import { SafeUser } from '@entities/users.entity';
+import { SafeUser } from '@entities/user.entity';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 
