@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
-import { databaseMasterConnections } from '@database/master';
 import { IGroupEntity, Group } from '@entities/group.entity';
 import { IModel } from '@shared/protocols/models.protocol';
+import { masterDatabase } from '@database/master';
 
 export class GroupModel extends IModel<Group> {
   declare name: string;
@@ -49,7 +49,7 @@ GroupModel.init(
     },
   },
   {
-    sequelize: databaseMasterConnections.master,
+    sequelize: masterDatabase.connection,
     modelName: 'group',
     tableName: 'groups',
     timestamps: true,

@@ -1,14 +1,15 @@
-import { DatabaseConnections } from '../connections';
-import { DatabaseRouter } from '../router';
+import { Dialect } from 'sequelize';
 import dotenv from 'dotenv';
 dotenv.config();
 
 import databaseConfig from '@project/infra/database/config';
-import { Dialect } from 'sequelize';
+import { DatabaseConnections } from '@database/connections';
 
-const replicaHosts = process.env.DATABASE_READ_REPLICA_HOSTS;
+const slaveReplications: string[] = process.env.DATABASE_READ_REPLICA_HOSTS
+  ? JSON.parse(process.env.DATABASE_READ_REPLICA_HOSTS)
+  : [];
 
-export const databaseMasterConnections = DatabaseConnections.getInstance(
+export const masterDatabase = DatabaseConnections.connect(
   {
     host: databaseConfig.host,
     port: Number(databaseConfig.port),
@@ -17,9 +18,5 @@ export const databaseMasterConnections = DatabaseConnections.getInstance(
     database: databaseConfig.database,
     dialect: databaseConfig.dialect as Dialect,
   },
-  replicaHosts,
+  slaveReplications,
 );
-
-export const databaseMaster = new DatabaseRouter(databaseMasterConnections);
-
-// Usar database nos repositórios

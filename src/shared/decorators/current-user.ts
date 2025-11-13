@@ -1,4 +1,4 @@
-import { SafeUser } from '@entities/user.entity';
+import { SafeUser, User } from '@entities/user.entity';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 
@@ -8,11 +8,17 @@ export interface CurrentUser extends SafeUser {
 }
 
 export const CurrentUser = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
+  (data: keyof CurrentUser | undefined, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest<Request>();
+    const rawUser = request['user'] as CurrentUser;
 
-    const user = request['user'];
+    if (!rawUser) return null;
 
-    return data ? user?.[data as string] : user;
+    // Cria uma instância real da entidade
+    const entityUser = new User(rawUser, rawUser.id);
+
+    // Se o decorador foi chamado com uma chave (ex: @CurrentUser('email')),
+    // devolve apenas aquela propriedade
+    return data ? entityUser[data] : entityUser;
   },
 );

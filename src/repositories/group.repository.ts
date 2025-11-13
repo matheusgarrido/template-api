@@ -1,6 +1,5 @@
-import { databaseMaster } from '@database/master';
 import { GroupModel } from '@database/master/models/main/group.model';
-import { EntityId } from '@entities/entity';
+import { EntityId, PartialEntity } from '@entities/entity';
 import { IGroupEntity, Group } from '@entities/group.entity';
 import { GroupNotFoundError } from '@shared/errors';
 import {
@@ -15,7 +14,7 @@ export class GroupRepository extends IRepository<Group> {
 
   async create(group: Group) {
     try {
-      const model = await databaseMaster.create(GroupModel, group.properties);
+      const model = await GroupModel.create(group.properties);
       return this.toDomain(model);
     } catch (err) {
       this.logger.error(err.message);
@@ -28,7 +27,7 @@ export class GroupRepository extends IRepository<Group> {
       return null;
     }
 
-    const model = await databaseMaster.findByPk(GroupModel, id);
+    const model = await GroupModel.findByPk(id);
     return this.toDomain(model);
   }
 
@@ -37,7 +36,7 @@ export class GroupRepository extends IRepository<Group> {
       return null;
     }
 
-    const model = await databaseMaster.findOne(GroupModel, {
+    const model = await GroupModel.findOne({
       where: attributes,
     });
 
@@ -45,7 +44,7 @@ export class GroupRepository extends IRepository<Group> {
   }
 
   async findAll(): Promise<IRepositoryFindAllResponse<Group>> {
-    const result = await databaseMaster.findAndCountAll(GroupModel, {});
+    const result = await GroupModel.findAndCountAll({});
     const entities = result.rows.map((model) =>
       this.toDomain(model),
     ) as Group[];
@@ -57,20 +56,16 @@ export class GroupRepository extends IRepository<Group> {
   }
 
   async update(
-    group: Partial<Group>,
+    group: PartialEntity<Group>,
     returnObject: boolean = true,
   ): Promise<Group | boolean | null> {
     if (!group.id) {
       throw new GroupNotFoundError();
     }
 
-    const [affectedCount] = await databaseMaster.update(
-      GroupModel,
-      group.properties,
-      {
-        where: { id: group.id },
-      },
-    );
+    const [affectedCount] = await GroupModel.update(group.properties, {
+      where: { id: group.id },
+    });
 
     if (returnObject) {
       return await this.findByPk(group.id);
@@ -79,9 +74,8 @@ export class GroupRepository extends IRepository<Group> {
     return affectedCount > 0;
   }
 
-  async remove(group: Partial<Group>): Promise<boolean> {
-    console.log('group: ==>', group);
-    const deleted = await databaseMaster.destroy(GroupModel, {
+  async remove(group: PartialEntity<Group>): Promise<boolean> {
+    const deleted = await GroupModel.destroy({
       where: { id: group.id },
     });
 

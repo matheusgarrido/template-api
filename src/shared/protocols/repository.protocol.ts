@@ -1,4 +1,4 @@
-import { Entity } from '@entities/entity';
+import { Entity, PartialEntity } from '@entities/entity';
 import { IModel } from './models.protocol';
 import { Logger } from 'nestjs-pino';
 
@@ -20,7 +20,10 @@ export abstract class IRepository<E extends Entity<any>> {
       return null;
     }
 
-    const entity = new this.EntityClass(model.properties, model.id);
+    const entity = new this.EntityClass(
+      model.properties as E['properties'],
+      model.id,
+    );
 
     return entity;
   }
@@ -34,9 +37,9 @@ export abstract class IRepository<E extends Entity<any>> {
   abstract findAll(): Promise<IRepositoryFindAllResponse<E>>;
 
   abstract update(
-    obj: Partial<E>,
+    obj: PartialEntity<E>,
     returnObject: boolean,
   ): Promise<E | boolean | null>;
 
-  abstract remove(obj: Partial<E>): Promise<boolean>;
+  abstract remove(obj: PartialEntity<E>): Promise<boolean>;
 }

@@ -3,6 +3,7 @@ import { IRemoveUserGateway as G } from './gateway';
 import { IUsecase } from '@shared/protocols/usecase.protocol';
 import { Inject, Injectable } from '@nestjs/common';
 import { UserNotFoundError } from '@shared/errors';
+import { User } from '@entities/user.entity';
 
 @Injectable()
 export class RemoveUserUsecase extends IUsecase<I, O, G> {
@@ -15,9 +16,8 @@ export class RemoveUserUsecase extends IUsecase<I, O, G> {
       throw new UserNotFoundError();
     }
 
-    const wasDeleted = await this.gateway.userRepository.remove(
-      input.currentUser,
-    );
+    const user = new User(input.currentUser, input.currentUser.id);
+    const wasDeleted = await this.gateway.userRepository.remove(user);
 
     return wasDeleted;
   }

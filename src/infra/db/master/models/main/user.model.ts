@@ -1,8 +1,8 @@
 import Sequelize from 'sequelize';
-import { databaseMasterConnections } from '@database/master';
 import { IUserEntity, User } from '@entities/user.entity';
 import { IModel } from '@shared/protocols/models.protocol';
 import { PasswordService } from '@infra/services/password.service';
+import { masterDatabase } from '@database/master';
 
 export class UserModel extends IModel<User> {
   declare name: string;
@@ -61,7 +61,7 @@ UserModel.init(
     },
   },
   {
-    sequelize: databaseMasterConnections.master,
+    sequelize: masterDatabase.connection,
     modelName: 'user',
     tableName: 'users',
     timestamps: true,

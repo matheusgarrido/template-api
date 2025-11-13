@@ -7,3 +7,9 @@ export class DatabaseError extends InternalServerError {
     super(DEFAULT_MESSAGE, 1);
   }
 }
+
+export class DatabaseConnectionError extends InternalServerError {
+  constructor() {
+    super('database-connection-error', 2);
+  }
+}

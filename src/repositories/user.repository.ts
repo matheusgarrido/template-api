@@ -1,6 +1,5 @@
-import { databaseMaster } from '@database/master';
 import { UserModel } from '@database/master/models/main/user.model';
-import { EntityId } from '@entities/entity';
+import { EntityId, PartialEntity } from '@entities/entity';
 import { IUserEntity, User } from '@entities/user.entity';
 import {
   IRepository,
@@ -14,7 +13,7 @@ export class UserRepository extends IRepository<User> {
 
   async create(user: User) {
     try {
-      const model = await databaseMaster.create(UserModel, user.properties);
+      const model = await UserModel.create(user.properties);
       return this.toDomain(model);
     } catch (err) {
       console.log('err: ==>', err);
@@ -28,7 +27,7 @@ export class UserRepository extends IRepository<User> {
       return null;
     }
 
-    const model = await databaseMaster.findByPk(UserModel, id);
+    const model = await UserModel.findByPk(id);
     return this.toDomain(model);
   }
 
@@ -37,7 +36,7 @@ export class UserRepository extends IRepository<User> {
       return null;
     }
 
-    const model = await databaseMaster.findOne(UserModel, {
+    const model = await UserModel.findOne({
       where: attributes,
     });
 
@@ -45,7 +44,7 @@ export class UserRepository extends IRepository<User> {
   }
 
   async findAll(): Promise<IRepositoryFindAllResponse<User>> {
-    const result = await databaseMaster.findAndCountAll(UserModel, {});
+    const result = await UserModel.findAndCountAll({});
     const entities = result.rows.map((model) => this.toDomain(model)) as User[];
 
     return {
@@ -55,17 +54,12 @@ export class UserRepository extends IRepository<User> {
   }
 
   async update(
-    user: Partial<User>,
+    user: PartialEntity<User>,
     returnObject: boolean = true,
   ): Promise<User | boolean | null> {
-    console.log('user: ==>', user);
-    const [affectedCount] = await databaseMaster.update(
-      UserModel,
-      user.properties,
-      {
-        where: { id: user.id },
-      },
-    );
+    const [affectedCount] = await UserModel.update(user.properties, {
+      where: { id: user.id },
+    });
 
     if (returnObject) {
       return await this.findByPk(user.id!);
@@ -74,9 +68,8 @@ export class UserRepository extends IRepository<User> {
     return affectedCount > 0;
   }
 
-  async remove(user: Partial<User>): Promise<boolean> {
-    console.log('user: ==>', user);
-    const deleted = await databaseMaster.destroy(UserModel, {
+  async remove(user: PartialEntity<User>): Promise<boolean> {
+    const deleted = await UserModel.destroy({
       where: { id: user.id },
     });
 

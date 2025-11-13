@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import { Entity, EntityId } from '@entities/entity';
 
 type ModelAttributes<EntityProperties> = EntityProperties & {
-  id: EntityId;
+  id: EntityId | undefined;
 };
 
 export abstract class IModel<

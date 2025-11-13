@@ -1,59 +1,101 @@
 // Responsabilidade Única: Apenas gerenciar as conexoes
-import { Options, Sequelize } from 'sequelize';
+import { DatabaseConnectionError } from '@shared/errors';
+import {
+  ConnectionOptions,
+  Options,
+  ReplicationOptions,
+  Sequelize,
+} from 'sequelize';
 
 export class DatabaseConnections {
-  private static instance: DatabaseConnections;
-  protected readonly masterConnection: Sequelize;
-  protected readonly replicaConnections: Sequelize[] = [];
+  private static connections: Map<string, DatabaseConnections> = new Map();
+  private readonly currentConnection: Sequelize;
 
   // Construtor com a lógica de inicialização de conexoes
-  private constructor(dbConfig: Options, replicaHosts?: string) {
-    // Conexao com a instancia master
-    this.masterConnection = new Sequelize(dbConfig);
+  private constructor(
+    dbConfig: Options,
+    private readonly replicaHosts?: string[],
+  ) {
+    const { database, username, password, host, port, ...config } = dbConfig;
 
-    // Conexoes para as replicas de leitura (se existirem)
-    const readReplicaHosts = (replicaHosts || '').split(',').filter((h) => h);
-    this.replicaConnections = readReplicaHosts
-      .map((host) => {
-        if (host) {
-          return new Sequelize({
-            ...dbConfig,
-            host: host.trim(),
-          });
-        }
-        return null;
-      })
-      .filter((conn) => conn !== null);
+    const basicOptions: ConnectionOptions = {
+      database,
+      username,
+      password,
+      port,
+    };
+
+    const options: Options = {
+      ...config,
+      pool: {
+        max: 10,
+        idle: 30000,
+      },
+      logging: console.log,
+    };
+
+    if (!this.replicaHosts?.length) Object.assign(options, dbConfig);
+    else {
+      const replication: ReplicationOptions = {
+        write: { ...basicOptions, host },
+        read: this.replicaHosts?.length
+          ? this.replicaHosts?.map((replicaHost) => ({
+              ...basicOptions,
+              host: replicaHost,
+            }))
+          : [],
+      };
+      options.replication = replication;
+    }
+
+    this.currentConnection = new Sequelize(
+      database as string,
+      username as string,
+      password as string,
+      options,
+    );
+
+    DatabaseConnections.connections = DatabaseConnections.connections.set(
+      database as string,
+      this,
+    );
+  }
+
+  public static connect(
+    dbConfig: Options,
+    replicaHosts?: string[],
+  ): DatabaseConnections {
+    return DatabaseConnections.getInstance(
+      dbConfig.database as string,
+      dbConfig,
+      replicaHosts,
+    );
   }
 
   public static getInstance(
-    dbConfig: Options,
-    replicaHosts?: string,
+    database: string,
+    dbConfig?: Options,
+    replicaHosts?: string[],
   ): DatabaseConnections {
-    if (!DatabaseConnections.instance) {
-      DatabaseConnections.instance = new DatabaseConnections(
-        dbConfig,
-        replicaHosts,
-      );
+    const dbConnection = DatabaseConnections.connections?.get(database);
+    if (!dbConnection) {
+      if (!dbConfig) {
+        throw new DatabaseConnectionError();
+      }
+      return new DatabaseConnections(dbConfig, replicaHosts);
     }
-    return DatabaseConnections.instance;
+    return dbConnection;
+  }
+
+  get connection(): Sequelize {
+    return this.currentConnection;
   }
 
   get countReplicas(): number {
-    return this.replicaConnections.length;
+    return this.replicaHosts?.length ?? 0;
   }
 
   get master() {
-    return this.masterConnection;
-  }
-
-  // Logica simples de load balancing para as replicas
-  getConnection(): Sequelize {
-    const countReplicas = this.countReplicas;
-    if (!countReplicas) return this.masterConnection;
-    if (countReplicas == 1) return this.replicaConnections[0];
-
-    const index = Math.floor(Math.random() * this.replicaConnections.length);
-    return this.replicaConnections[index];
+    return this.connection;
   }
 }

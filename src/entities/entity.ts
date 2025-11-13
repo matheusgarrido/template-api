@@ -1,5 +1,8 @@
 export type EntityId = string | number;
 
+export type PartialEntity<E extends Entity<any>> =
+  E extends Entity<infer P> ? Entity<Partial<P>> : never;
+
 export class Entity<EntityProps> {
   private readonly $properties: Partial<EntityProps>;
   private readonly $id: EntityId | undefined;
