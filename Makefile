@@ -163,7 +163,7 @@ test: ## Executa os testes automatizados.
 	docker compose --env-file ./.env \
 		-f $(DOCKER_COMPOSE_PROD) \
 		-f $(DOCKER_COMPOSE_DEV) \
-		exec api npm run test
+		exec api npm run test -- $(name) --verbose
 
 
 test-coverage: ## Executa os testes automatizados com cobertura.
