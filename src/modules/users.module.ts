@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { UserRepository } from 'src/repositories/user.repository';
+import { UserRepository } from '@repositories/user.repository';
 
 import * as CreateUser from '@usecases/create-user';
 import * as GetUser from '@usecases/get-user';

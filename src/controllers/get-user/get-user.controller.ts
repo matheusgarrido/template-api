@@ -4,7 +4,7 @@ import type { IGetUserInput as I } from '@usecases/get-user/dto';
 import { IController } from '@shared/protocols/controller.protocol';
 import { GetUserUsecase } from '@usecases/get-user/get-user.usecase';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { userMock } from 'src/tests/user.mock';
+import { userMock } from '@tests/user.mock';
 import { AuthGuard } from '@infra/guards/auth.guard';
 import { CurrentUserDecorator } from '@shared/decorators';
 import { GetUserParamsDto } from './dto';

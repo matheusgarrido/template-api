@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { userMock } from 'src/tests/user.mock';
+import { userMock } from '@tests/user.mock';
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 
 export class CreateUserBodyDto {

@@ -1,4 +1,3 @@
-// src/global-setup.function.ts
 import { INestApplication } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';

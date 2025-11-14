@@ -1,4 +1,3 @@
-// src/logger/sentry.transport.ts
 import { Writable } from 'stream';
 import * as Sentry from '@sentry/node';
 

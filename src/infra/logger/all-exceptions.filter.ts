@@ -1,4 +1,3 @@
-// src/filters/all-exceptions.filter.ts
 import { Catch, ArgumentsHost, HttpStatus, Logger } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { DatabaseError } from '@shared/errors';

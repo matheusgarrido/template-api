@@ -4,7 +4,7 @@ import { CreateUserBodyDto } from './dto';
 import { CreateUserUsecase } from '@usecases/create-user/create-user.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
 import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
-import { userMock } from 'src/tests/user.mock';
+import { userMock } from '@tests/user.mock';
 
 @ApiTags('Users')
 @Controller('users')

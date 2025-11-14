@@ -1,6 +1,6 @@
 import { InvalidUserCredentialsError } from '@shared/errors/unauthorized';
 import { PasswordService } from './password.service';
-import { UserRepository } from 'src/repositories/user.repository';
+import { UserRepository } from '@repositories/user.repository';
 import { UserNotFoundError } from '@shared/errors';
 import { TokenService } from './token.service';
 

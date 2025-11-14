@@ -1,6 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-// import { Logger } from 'nestjs-pino';
-
 import { AppModule } from './app.module';
 import createDocument from '@infra/docs';
 import { setupGlobalServices } from '@infra/logger/config';

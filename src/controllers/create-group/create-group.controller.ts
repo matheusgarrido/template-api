@@ -7,7 +7,7 @@ import type { CreateGroupPresenter as P } from './adapter';
 import { CreateGroupUsecase } from '@usecases/create-group/create-group.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
 import { ApiTags, ApiBody, ApiResponse, ApiProperty } from '@nestjs/swagger';
-import { groupMock } from 'src/tests/group.mock';
+import { groupMock } from '@tests/group.mock';
 
 class CreateGroupDto implements ICreateGroupInput {
   @ApiProperty({

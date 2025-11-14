@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { userMock } from 'src/tests/user.mock';
+
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { userMock } from '@tests/user.mock';
 
 export class AuthLoginBodyDto {
   @IsNotEmpty({ message: 'email-required' })

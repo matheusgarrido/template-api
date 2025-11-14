@@ -3,7 +3,7 @@ import type { IListUserPresenter as P } from './adapter';
 import { IController } from '@shared/protocols/controller.protocol';
 import { ListUsersUsecase } from '@usecases/list-users/list-users.usecase';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { userMock } from 'src/tests/user.mock';
+import { userMock } from '@tests/user.mock';
 
 @ApiTags('Users')
 @Controller('users')

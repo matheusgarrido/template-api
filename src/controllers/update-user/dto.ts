@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { userMock } from 'src/tests/user.mock';
+import { userMock } from '@tests/user.mock';
 import { IdParamsDto } from '@shared/protocols/dto.protocol';
 
 export class UpdateUserParamsDto extends IdParamsDto {}
