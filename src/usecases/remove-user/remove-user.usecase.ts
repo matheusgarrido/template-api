@@ -12,7 +12,7 @@ export class RemoveUserUsecase extends IUsecase<I, O, G> {
   }
 
   async execute(input: I): O {
-    if (!input.currentUser.id || input.currentUser.id !== +input.id) {
+    if (!input.currentUser.id || input.currentUser.id !== input.id) {
       throw new UserNotFoundError();
     }
 

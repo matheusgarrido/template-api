@@ -1,6 +1,6 @@
 import { EntityId } from '@entities/entity';
 import { SafeUser } from '@entities/user.entity';
-import { CurrentUser } from '@shared/decorators';
+import { CurrentUserDto } from '@shared/decorators/current-user/dto';
 import { InvalidTokenAccessError } from '@shared/errors/unauthorized';
 import jwt from 'jsonwebtoken';
 
@@ -18,10 +18,10 @@ export class TokenService {
     return token;
   }
 
-  verify(token?: string): CurrentUser {
+  verify(token?: string): CurrentUserDto {
     if (!token) throw new InvalidTokenAccessError();
     try {
-      const payload = jwt.verify(token, this.secret) as CurrentUser;
+      const payload = jwt.verify(token, this.secret) as CurrentUserDto;
       return payload;
     } catch {
       throw new InvalidTokenAccessError();

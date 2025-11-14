@@ -1,15 +1,18 @@
 import { NestFactory } from '@nestjs/core';
+// import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
 import createDocument from '@infra/docs';
-// import { Logger } from 'nestjs-pino';
 import { setupGlobalServices } from '@infra/logger/config';
+import { createValidationPipe } from '@infra/config/validation/validation.pipe';
 
 async function bootstrap() {
   const isProd = process.env.NODE_ENV === 'production';
   const app = await NestFactory.create(AppModule, {
     bufferLogs: isProd,
   });
+
+  app.useGlobalPipes(createValidationPipe());
 
   // app.useLogger(app.get(Logger));
 

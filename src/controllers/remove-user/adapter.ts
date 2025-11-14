@@ -1,4 +1,6 @@
+import { EntityId } from '@entities/entity';
+
 export interface RemoveUserPresenter {
-  id: string;
+  id: EntityId;
   deleted: boolean;
 }

@@ -10,7 +10,8 @@ export interface IUserEntity {
   deletedAt?: Date;
 }
 
-export type SafeUser = Omit<User, 'passwordHash' | 'password'>;
+export type ISafeUserEntity = Omit<IUserEntity, 'passwordHash' | 'password'>;
+export class SafeUser extends Entity<ISafeUserEntity> {}
 
 export class User extends Entity<IUserEntity> {
   get name() {

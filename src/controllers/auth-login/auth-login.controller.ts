@@ -1,29 +1,9 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import type {
-  IAuthLoginInput as I,
-  IAuthLoginInput,
-} from '@usecases/auth-login/dto';
 import type { AuthLoginPresenter as P } from './adapter';
 import { AuthLoginUsecase } from '@usecases/auth-login/auth-login.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
-import { ApiTags, ApiBody, ApiResponse, ApiProperty } from '@nestjs/swagger';
-import { userMock } from 'src/tests/user.mock';
-
-class AuthLoginDto implements IAuthLoginInput {
-  @ApiProperty({
-    description: 'The email of the user',
-    example: userMock.email,
-    uniqueItems: true,
-  })
-  email: string;
-
-  @ApiProperty({
-    description: 'The password of the user',
-    example: userMock.password,
-    format: 'password',
-  })
-  password: string;
-}
+import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { AuthLoginBodyDto } from './dto';
 
 @ApiTags('Auth')
 @Controller('auth/login')
@@ -35,7 +15,7 @@ export class AuthLoginController extends IController<AuthLoginUsecase> {
   @Post()
   @HttpCode(200)
   @ApiBody({
-    type: AuthLoginDto,
+    type: AuthLoginBodyDto,
     description: 'User login data',
   })
   @ApiResponse({
@@ -47,7 +27,7 @@ export class AuthLoginController extends IController<AuthLoginUsecase> {
       } as P,
     },
   })
-  async authlogin(@Body() input: I): Promise<P> {
+  async authlogin(@Body() input: AuthLoginBodyDto): Promise<P> {
     const output = await this.usecase.execute(input);
 
     const adapterResponse: P = {

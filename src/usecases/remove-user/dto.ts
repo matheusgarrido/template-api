@@ -1,5 +1,5 @@
 import { EntityId } from '@entities/entity';
-import { CurrentUser } from '@shared/decorators';
+import { CurrentUserDto } from '@shared/decorators';
 
 export interface IRemoveUserInputBody {
   name?: string;
@@ -9,7 +9,7 @@ export interface IRemoveUserInputBody {
 
 export interface IRemoveUserInput extends IRemoveUserInputBody {
   id: EntityId;
-  currentUser: CurrentUser;
+  currentUser: CurrentUserDto;
 }
 
 export type IRemoveUserOutput = Promise<boolean>;

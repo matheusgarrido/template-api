@@ -1,11 +1,14 @@
 import { Controller, Get, HttpCode, Param, UseGuards } from '@nestjs/common';
 import type { IGetUserPresenter as P } from './adapter';
+import type { IGetUserInput as I } from '@usecases/get-user/dto';
 import { IController } from '@shared/protocols/controller.protocol';
 import { GetUserUsecase } from '@usecases/get-user/get-user.usecase';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { userMock } from 'src/tests/user.mock';
 import { AuthGuard } from '@infra/guards/auth.guard';
-import { CurrentUser } from '@shared/decorators';
+import { CurrentUserDecorator } from '@shared/decorators';
+import { GetUserParamsDto } from './dto';
+import { CurrentUserDto } from '@shared/decorators/current-user/dto';
 
 @ApiTags('Users')
 @UseGuards(AuthGuard)
@@ -34,10 +37,15 @@ export class GetUserController extends IController<GetUserUsecase> {
     },
   })
   async findOne(
-    @Param('id') id: string,
-    @CurrentUser() currentUser: CurrentUser,
+    @Param() { id }: GetUserParamsDto,
+    @CurrentUserDecorator() currentUser: CurrentUserDto,
   ): Promise<P> {
-    const output = await this.usecase.execute({ id, currentUser });
+    const input = {
+      id,
+      currentUser,
+    } as I;
+
+    const output = await this.usecase.execute(input);
 
     const adapterResponse: P = {
       user: output.toSafeJSON(),

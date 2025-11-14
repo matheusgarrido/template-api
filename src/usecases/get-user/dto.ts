@@ -1,9 +1,10 @@
+import { EntityId } from '@entities/entity';
 import { User } from '@entities/user.entity';
-import { CurrentUser } from '@shared/decorators';
+import { CurrentUserDto } from '@shared/decorators';
 
 export interface IGetUserInput {
-  id: string;
-  currentUser: CurrentUser;
+  id: EntityId;
+  currentUser: CurrentUserDto;
 }
 
 export type IGetUserOutput = Promise<User>;

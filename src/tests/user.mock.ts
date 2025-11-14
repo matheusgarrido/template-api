@@ -1,19 +1,31 @@
-import { IUserEntity, User } from '@entities/user.entity';
+import {
+  ISafeUserEntity,
+  IUserEntity,
+  SafeUser,
+  User,
+} from '@entities/user.entity';
 import { dateCurrentMock } from './default.mock';
-import { CurrentUser } from '@shared/decorators';
+import { ICurrentUser } from '@shared/decorators';
 
-export const userMockData: IUserEntity = {
+export const safeUserMockData: ISafeUserEntity = {
   email: 'joao@example.com',
   name: 'João Silva',
-  password: '123456',
   createdAt: dateCurrentMock,
   updatedAt: dateCurrentMock,
 };
 
+export const safeUserMock = new SafeUser(safeUserMockData, '1');
+
+export const userMockData: IUserEntity = {
+  ...safeUserMockData,
+  password: '123456',
+  passwordHash: 'hashed-password',
+};
+
 export const userMock = new User(userMockData, '1');
 
-export const currentUserMock: CurrentUser = {
-  ...userMock.toSafeJSON(),
+export const currentUserMock: ICurrentUser = {
+  ...safeUserMock.toSafeJSON(),
   iat: dateCurrentMock.getTime(),
   exp: dateCurrentMock.getTime() * 24 * 60 * 60 * 1000,
 };

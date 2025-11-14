@@ -39,7 +39,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     // }
 
     const error: any = {
-      message: this.getMessage(outputException),
+      message: this.getErrorMessages(outputException),
       code: outputException.fullCode,
     };
 
@@ -101,11 +101,24 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     return HttpStatus.INTERNAL_SERVER_ERROR;
   }
 
-  private getMessage(exception: unknown): string {
-    if (exception instanceof Error) {
-      return exception.message;
+  private getErrorMessages(exception: any) {
+    const errors = this.getMessage(exception);
+    if (Array.isArray(errors)) {
+      return errors;
     }
-    return 'Internal server error';
+    return [errors];
+  }
+
+  private getMessage(exception: any): string {
+    if (exception.getResponse) {
+      const response = exception.getResponse();
+
+      if (typeof response === 'object' && response.message) {
+        return response.message;
+      }
+    }
+
+    return exception?.message || 'Internal server error';
   }
 
   private getErrorType(exception: unknown): string {

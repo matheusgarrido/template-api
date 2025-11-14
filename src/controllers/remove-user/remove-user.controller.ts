@@ -1,18 +1,12 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  HttpCode,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Delete, HttpCode, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import type { RemoveUserPresenter as P } from './adapter';
 import { RemoveUserUsecase } from '@usecases/remove-user/remove-user.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
 import { userMock } from '@tests/user.mock';
 import { AuthGuard } from '@infra/guards/auth.guard';
-import { CurrentUser } from '@shared/decorators';
+import { DeleteUserParamsDto } from './dto';
+import { CurrentUserDecorator, CurrentUserDto } from '@shared/decorators';
 
 @ApiTags('Users')
 @UseGuards(AuthGuard)
@@ -36,13 +30,17 @@ export class RemoveUserController extends IController<RemoveUserUsecase> {
     },
   })
   async remove(
-    @Param('id') id: string,
-    @CurrentUser() currentUser: CurrentUser,
+    @Param() { id }: DeleteUserParamsDto,
+    @CurrentUserDecorator() currentUser: CurrentUserDto,
   ): Promise<P> {
-    const output = await this.usecase.execute({ id, currentUser });
+    const input = {
+      id,
+      currentUser,
+    };
+    const output = await this.usecase.execute(input);
 
     const adapterResponse: P = {
-      id: id,
+      id,
       deleted: output,
     };
 

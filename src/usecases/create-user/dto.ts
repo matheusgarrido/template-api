@@ -1,6 +1,6 @@
 import { EntityId } from '@entities/entity';
 
-export interface ICreateUserInput {
+export class ICreateUserInput {
   name: string;
   email: string;
   password: string;
