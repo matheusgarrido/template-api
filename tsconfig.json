@@ -27,6 +27,7 @@
       "@project/infra/*": ["infra/*"],
       "@controllers/*": ["src/controllers/*"],
       "@usecases/*": ["src/usecases/*"],
+      "@repositories/*": ["src/repositories/*"],
       "@entities/*": ["src/entities/*"],
       "@database/*": ["src/infra/db/*"],
       "@infra/*": ["src/infra/*"],

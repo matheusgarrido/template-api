@@ -1,0 +1,28 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "testRegex": ".*\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverageFrom": ["**/*.(t|j)s"],
+  "testEnvironment": "node",
+  "moduleNameMapper": {
+    "^@project/infra/(.*)*": "<rootDir>/infra/$1",
+    "^@controllers/(.*)*": "<rootDir>/src/controllers/$1",
+    "^@usecases/(.*)*": "<rootDir>/src/usecases/$1",
+    "^@repositories/(.*)*": "<rootDir>/src/repositories/$1",
+    "^@entities/(.*)*": "<rootDir>/src/entities/$1",
+    "^@database/(.*)*": "<rootDir>/src/infra/db/$1",
+    "^@infra/(.*)*": "<rootDir>/src/infra/$1",
+    "^@modules/(.*)*": "<rootDir>/src/modules/$1",
+    "^@shared/(.*)*": "<rootDir>/src/shared/$1",
+    "^@tests/(.*)*": "<rootDir>/src/tests/$1"
+  },
+  "coverageDirectory": "./coverage",
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/coverage/",
+    "/dist/",
+    "/infra/database/migrations/"
+  ]
+}
