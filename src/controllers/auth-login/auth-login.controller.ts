@@ -1,9 +1,10 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import type { AuthLoginPresenter as P } from './adapter';
+import type { IAuthLoginPresenter as P } from './adapter';
 import { AuthLoginUsecase } from '@usecases/auth-login/auth-login.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
 import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { AuthLoginBodyDto } from './dto';
+export type { P };
 
 @ApiTags('Auth')
 @Controller('auth/login')

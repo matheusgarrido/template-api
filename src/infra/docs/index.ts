@@ -4,7 +4,7 @@ import { ApiDocumentConfig } from './config';
 
 const DocVersions: ApiDocumentConfig[] = [...ApiDocVersions];
 
-function createDocument(app: INestApplication) {
+export function createDocument(app: INestApplication) {
   DocVersions.map((DocVersion) => DocVersion.listen(app));
 }
 

@@ -5,6 +5,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UserNotFoundError } from '@shared/errors';
 import { InvalidUserCredentialsError } from '@shared/errors/unauthorized';
 
+export type { I, O, G };
+
 @Injectable()
 export class AuthLoginUsecase extends IUsecase<I, O, G> {
   constructor(@Inject(G) protected readonly gateway: G) {

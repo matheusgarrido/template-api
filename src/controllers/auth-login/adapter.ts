@@ -1,3 +1,3 @@
-export interface AuthLoginPresenter {
+export interface IAuthLoginPresenter {
   token: string;
 }

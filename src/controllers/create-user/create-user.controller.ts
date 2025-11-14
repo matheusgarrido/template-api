@@ -1,10 +1,12 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import type { CreateUserPresenter as P } from './adapter';
+import type { ICreateUserPresenter as P } from './adapter';
 import { CreateUserBodyDto } from './dto';
 import { CreateUserUsecase } from '@usecases/create-user/create-user.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
 import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { userMock } from '@tests/user.mock';
+
+export type { P };
 
 @ApiTags('Users')
 @Controller('users')

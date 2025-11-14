@@ -12,10 +12,12 @@ import type { IUpdateUserInput as I } from '@usecases/update-user/dto';
 import { UpdateUserUsecase } from '@usecases/update-user/update-user.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
 import { userMock } from '@tests/user.mock';
-import { AuthGuard } from '@infra/guards/auth.guard';
+import { AuthGuard } from '@infra/guards/auth/auth.guard';
 import { UpdateUserBodyDto, UpdateUserParamsDto } from './dto';
 import { CurrentUserDto } from '@shared/decorators/current-user/dto';
 import { CurrentUserDecorator } from '@shared/decorators';
+
+export type { I, P };
 
 @ApiTags('Users')
 @UseGuards(AuthGuard)

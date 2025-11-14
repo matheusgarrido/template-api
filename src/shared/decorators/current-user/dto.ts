@@ -1,3 +1,4 @@
+import { EntityId } from '@entities/entity';
 import { ISafeUserEntity } from '@entities/user.entity';
 import { IdParamsDto } from '@shared/protocols/dto.protocol';
 import {
@@ -10,6 +11,7 @@ import {
 } from 'class-validator';
 
 export interface ICurrentUser extends ISafeUserEntity {
+  id: EntityId;
   iat: number;
   exp: number;
 }

@@ -1,3 +1,3 @@
-export interface CreateUserPresenter {
+export interface ICreateUserPresenter {
   id: string;
 }

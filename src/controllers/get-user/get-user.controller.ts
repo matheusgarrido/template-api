@@ -5,10 +5,12 @@ import { IController } from '@shared/protocols/controller.protocol';
 import { GetUserUsecase } from '@usecases/get-user/get-user.usecase';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { userMock } from '@tests/user.mock';
-import { AuthGuard } from '@infra/guards/auth.guard';
+import { AuthGuard } from '@infra/guards/auth/auth.guard';
 import { CurrentUserDecorator } from '@shared/decorators';
 import { GetUserParamsDto } from './dto';
 import { CurrentUserDto } from '@shared/decorators/current-user/dto';
+
+export type { I, P };
 
 @ApiTags('Users')
 @UseGuards(AuthGuard)

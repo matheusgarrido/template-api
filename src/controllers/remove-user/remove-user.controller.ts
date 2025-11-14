@@ -4,9 +4,11 @@ import type { RemoveUserPresenter as P } from './adapter';
 import { RemoveUserUsecase } from '@usecases/remove-user/remove-user.usecase';
 import { IController } from '@shared/protocols/controller.protocol';
 import { userMock } from '@tests/user.mock';
-import { AuthGuard } from '@infra/guards/auth.guard';
+import { AuthGuard } from '@infra/guards/auth/auth.guard';
 import { DeleteUserParamsDto } from './dto';
 import { CurrentUserDecorator, CurrentUserDto } from '@shared/decorators';
+
+export type { P };
 
 @ApiTags('Users')
 @UseGuards(AuthGuard)
