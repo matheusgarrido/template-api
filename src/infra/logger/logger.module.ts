@@ -2,12 +2,12 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
 
+const redact = ['req.headers', 'req.remoteAddress', 'res.headers'];
+
 @Module({
   imports: [
     PinoLoggerModule.forRoot({
       pinoHttp: {
-        // Esta é a configuração mais simples e segura.
-        // Ela usa a sintaxe de atalho do Pino para o transport.
         transport: {
           target: 'pino-pretty',
           options: {
@@ -15,7 +15,12 @@ import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
             singleLine: true,
           },
         },
-        // Nível de log para desenvolvimento
+        autoLogging: false,
+        redact,
+        serializers: {
+          req: () => undefined, // remove req do log
+          res: () => undefined, // remove res do log
+        },
         level: 'debug',
       },
     }),
