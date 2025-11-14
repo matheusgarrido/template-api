@@ -1,3 +1,7 @@
+.PHONY: dev prod sh down-dev down-prod kill-docker-proxy down restart stop-all kill \
+        build-dev build-prod logs status clean migrate-dev migration-undo-dev \
+        migration-reset-dev test help
+
 # Define variáveis para os nomes dos arquivos docker-compose
 # DOCKER_COMPOSE_PATH = ./infra/docker
 DOCKER_COMPOSE_PROD = ./infra/docker/docker-compose.yml
@@ -6,50 +10,35 @@ DATABASE_CONFIG = ./infra/database/config.js
 DATABASE_MIGRATIONS = ./infra/database/migrations
 DATABASE_SEEDERS = ./infra/database/seeders
 
-# Fornece ajuda e documentação sobre os alvos disponíveis
-help:
-	@echo "-----------------------------------"
-	@echo "Comandos Make disponíveis:"
-	@echo "-----------------------------------"
-	@echo "dev			- Inicia o ambiente de desenvolvimento."
-	@echo "prod	   		- Inicia o ambiente de produção."
-	@echo "down-dev   	- Para e remove os containers de desenvolvimento."
-	@echo "down-prod  	- Para e remove os containers de produção."
-	@echo "down	 		- Para os containers de ambos os ambientes (dev e prod)."
-	@echo "restart		- Reinicia os containers do ambiente de desenvolvimento."
-	@echo "sh	 		- Acessa o bash do container de desenvolvimento."
-	@echo "build-dev  	- Constrói a imagem para desenvolvimento."
-	@echo "build-prod 	- Constrói a imagem para produção."
-	@echo "clean	  	- Remove as imagens e containers para uma limpeza completa."
-	@echo "logs	   		- Exibe os logs dos containers de desenvolvimento."
-	@echo "help	   		- Exibe esta mensagem de ajuda."
-
 # -----------------
 # Alvos de Execução
 # -----------------
 
-dev:
+dev: ## Inicia o ambiente de desenvolvimento.
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) up --build -d
 	$(MAKE) migrate-dev
 
-prod:
+prod: ## Inicia o ambiente de produção.
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) up --build -d
+
+sh: ## Acessa o bash do container de desenvolvimento.
+	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) exec api sh
 
 # --------------------
 # Alvos de Interrupção
 # --------------------
 
-down-dev:
+down-dev: ## Para e remove os containers de desenvolvimento.
 	@echo "Parando ambiente de desenvolvimento..."
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) down -v --remove-orphans --timeout 0
 	$(MAKE) kill-docker-proxy
 
-down-prod:
+down-prod: ## Para e remove os containers de produção.
 	@echo "Parando ambiente de produção..."
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) down -v --remove-orphans --timeout 0
 	$(MAKE) kill-docker-proxy
 
-kill-docker-proxy:
+kill-docker-proxy: ## Mata processos docker-proxy que estejam usando a porta 3000
 	@echo "Verificando processos docker-proxy na porta 3000..."
 	@-if command -v lsof >/dev/null 2>&1; then \
 		PIDS=$$(lsof -ti:3000 2>/dev/null || true); \
@@ -69,18 +58,15 @@ kill-docker-proxy:
 		fi; \
 	fi
 
-down:
+down: ## Para os containers de ambos os ambientes (dev e prod).
 	$(MAKE) down-dev
 	$(MAKE) down-prod
 	$(MAKE) kill-docker-proxy
 
-restart:
+restart: ## Reinicia os containers do ambiente de desenvolvimento.
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) restart
 
-sh:
-	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) exec api sh
-
-stop-all:
+stop-all: ## Para todos os containers da API e mata processos Node locais na porta 3000
 	@echo "Parando containers da API..."
 	-docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) down -v
 	@echo "Verificando containers restantes..."
@@ -92,7 +78,7 @@ stop-all:
 # ----------------
 # Mata processos Node que estejam usando a porta 3000
 # ----------------
-kill:
+kill: ## Mata processos Node que estejam usando a porta 3000
 	@echo "Procurando processos na porta 3000..."
 	@if command -v netstat >/dev/null 2>&1; then \
 		echo "Usando netstat para encontrar processos..."; \
@@ -113,20 +99,20 @@ kill:
 # Alvos de Build
 # ----------------
 
-build-dev:
+build-dev: ## Constrói a imagem para desenvolvimento.
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) build
 
-build-prod:
+build-prod: ## Constrói a imagem para produção.
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) build
 
 # ----------------
 # Alvo de Monitoramento
 # ----------------
 
-logs:
+logs: ## Exibe os logs dos containers de desenvolvimento.
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) -f $(DOCKER_COMPOSE_DEV) logs -f
 
-status:
+status: ## Exibe o status dos containers, redes e volumes relacionados ao projeto.
 	@echo "📊 Containers:"
 	docker ps -a
 # 	docker ps -a --filter "name=party-stories"
@@ -141,30 +127,70 @@ status:
 # Alvo de Limpeza
 # ----------------
 
-clean:
+clean: ## Remove as imagens e containers para uma limpeza completa.
 	docker compose --env-file ./.env -f $(DOCKER_COMPOSE_PROD) down --volumes --rmi all
 
 # ----------------
 # Alvos de Banco de Dados
 # ----------------
 
-migrate-dev:
+migrate-dev: ## Executa as migrações do banco de dados no ambiente de desenvolvimento.
 	docker compose --env-file ./.env \
 		-f $(DOCKER_COMPOSE_PROD) \
 		-f $(DOCKER_COMPOSE_DEV) \
 		exec api npx ts-node -O '{"module":"CommonJS"}' ./node_modules/.bin/sequelize-cli db:migrate \
 			--migrations-path $(DATABASE_MIGRATIONS) --config $(DATABASE_CONFIG)
 
-migration-undo-dev:
+migration-undo-dev: ## Desfaz a última migração do banco de dados no ambiente de desenvolvimento.
 	docker compose --env-file ./.env \
 		-f $(DOCKER_COMPOSE_PROD) \
 		-f $(DOCKER_COMPOSE_DEV) \
 		exec api npx ts-node -O '{"module":"CommonJS"}' ./node_modules/.bin/sequelize-cli db:migrate:undo \
 			--migrations-path $(DATABASE_MIGRATIONS) --config $(DATABASE_CONFIG)
 
-migration-reset-dev:
+migration-reset-dev: ## Desfaz todas as migrações do banco de dados no ambiente de desenvolvimento.
 	docker compose --env-file ./.env \
 		-f $(DOCKER_COMPOSE_PROD) \
 		-f $(DOCKER_COMPOSE_DEV) \
 		exec api npx ts-node -O '{"module":"CommonJS"}' ./node_modules/.bin/sequelize-cli db:migrate:undo:all \
 			--migrations-path $(DATABASE_MIGRATIONS) --config $(DATABASE_CONFIG)
+
+# ----------------
+# Alvos de Testes
+# ----------------
+
+test: ## Executa os testes automatizados.
+	docker compose --env-file ./.env \
+		-f $(DOCKER_COMPOSE_PROD) \
+		-f $(DOCKER_COMPOSE_DEV) \
+		exec api npm run test
+
+
+test-coverage: ## Executa os testes automatizados com cobertura.
+	docker compose --env-file ./.env \
+		-f $(DOCKER_COMPOSE_PROD) \
+		-f $(DOCKER_COMPOSE_DEV) \
+		exec api npm run test:cov
+
+# ----------------
+# Alvos de Suporte
+# ----------------
+
+help: ## Exibe esta mensagem de ajuda
+	@echo "--------------------------"
+	@echo "Comandos Make disponíveis:"
+	@echo "--------------------------"
+	@awk '\
+		BEGIN { FS=":.*##"; printf "" } \
+		/^# Alvos de/ { \
+			section = substr($$0, 2); \
+			gsub(/^ +| +$$/, "", section); \
+			printf "\n%s\n", section; \
+			printf "%s\n", "--------------------------"; \
+		} \
+		/^[a-zA-Z0-9_-]+:.*##/ { \
+			target = $$1; \
+			desc = $$2; \
+			gsub(/^[ \t]+|[ \t]+$$/, "", desc); \
+			printf "%-25s %s\n", target, desc; \
+		}' Makefile
