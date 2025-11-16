@@ -1,6 +1,7 @@
-import { Entity, PartialEntity } from '@entities/entity';
+import { Entity } from '@entities/entity';
 import { IModel } from './models.protocol';
 import { Logger } from 'nestjs-pino';
+import { PartialEntity } from './entity.protocol';
 
 export interface IRepositoryFindAllResponse<E extends Entity<any>> {
   data: E[];

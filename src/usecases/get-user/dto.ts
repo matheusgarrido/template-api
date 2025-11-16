@@ -1,4 +1,4 @@
-import { EntityId } from '@entities/entity';
+import { EntityId } from '@shared/protocols/entity.protocol';
 import { User } from '@entities/user.entity';
 import { CurrentUserDto } from '@shared/decorators';
 

@@ -1,5 +1,5 @@
 import { UserModel } from '@database/master/models/main/user.model';
-import { EntityId, PartialEntity } from '@entities/entity';
+import { EntityId, PartialEntity } from '@shared/protocols/entity.protocol';
 import { IUserEntity, User } from '@entities/user.entity';
 import {
   IRepository,

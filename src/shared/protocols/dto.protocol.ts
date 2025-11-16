@@ -1,7 +1,7 @@
-import type { EntityId } from '@entities/entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
+import type { EntityId } from './entity.protocol';
 
 export class IdParamsDto {
   @IsNotEmpty({ message: 'id-required' })

@@ -1,5 +1,4 @@
-import { EntityId } from '@entities/entity';
-
+import { EntityId } from '@shared/protocols/entity.protocol';
 export interface ICreateGroupInput {
   name: string;
   description?: string;

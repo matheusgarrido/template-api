@@ -1,4 +1,4 @@
-import { EntityId } from '@entities/entity';
+import { EntityId } from '@shared/protocols/entity.protocol';
 import { CurrentUserDto } from '@shared/decorators';
 
 export interface IUpdateUserInputBody {

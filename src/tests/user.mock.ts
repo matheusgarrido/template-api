@@ -6,8 +6,7 @@ import {
 } from '@entities/user.entity';
 import { dateCurrentMock } from './default.mock';
 import { CurrentUserDto, ICurrentUser } from '@shared/decorators';
-import { EntityId } from '@entities/entity';
-
+import { EntityId } from '@shared/protocols/entity.protocol';
 export const safeUserMockData: ISafeUserEntity = {
   email: 'joao@example.com',
   name: 'João Silva',
@@ -26,7 +25,7 @@ export const userMockData: IUserEntity = {
 export const userMock = new User(userMockData, '1');
 
 export const currentUserMockData: ICurrentUser = {
-  ...safeUserMock.toSafeJSON(),
+  ...safeUserMockData,
   id: userMock.id as EntityId,
   iat: dateCurrentMock.getTime(),
   exp: dateCurrentMock.getTime() * 24 * 60 * 60 * 1000,

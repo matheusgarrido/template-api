@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthLoginController } from './auth-login.controller';
-import { AuthLoginUsecase } from '@usecases/auth-login/auth-login.usecase';
+import { AuthLoginController } from './controller';
+import { AuthLoginUsecase } from '@usecases/auth-login/usecase';
 import { AuthLoginBodyDto } from './dto';
 import type { IAuthLoginPresenter } from './adapter';
 import { usecaseMock } from '@tests/usecases.mock';

@@ -1,5 +1,5 @@
 import { GroupModel } from '@database/master/models/main/group.model';
-import { EntityId, PartialEntity } from '@entities/entity';
+import { EntityId, PartialEntity } from '@shared/protocols/entity.protocol';
 import { IGroupEntity, Group } from '@entities/group.entity';
 import { GroupNotFoundError } from '@shared/errors';
 import {

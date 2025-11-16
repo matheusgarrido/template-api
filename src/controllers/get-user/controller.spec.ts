@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import type { I, P } from './get-user.controller';
-import { GetUserController } from './get-user.controller';
-import { GetUserUsecase } from '@usecases/get-user/get-user.usecase';
+import type { I, P } from './controller';
+import { GetUserController } from './controller';
+import { GetUserUsecase } from '@usecases/get-user/usecase';
 import { GetUserParamsDto } from './dto';
 import { usecaseMock } from '@tests/usecases.mock';
 import { currentUserMock, userMock } from '@tests/user.mock';
-import { AuthGuard } from '@infra/guards/auth';
+import { AuthGuard } from '@infra/decorators/auth';
 import { MockAuthGuard } from '@tests/guards/auth-guard.mock';
 
 type UsecaseOutput = Awaited<ReturnType<GetUserUsecase['execute']>>;

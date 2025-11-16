@@ -1,10 +1,14 @@
 import { ModuleMetadata, Provider } from '@nestjs/common';
 import { AuthModule } from '@modules/index';
+import { IAdapter } from '@shared/protocols/adapter.protocol';
 
-interface ListItem {
-  controller?: any;
+interface UsecaseListItem {
   gateway: any;
   usecase: any;
+}
+interface HttpLIstItem {
+  controller: any;
+  adapter: any;
 }
 
 interface ModuleItems {
@@ -17,12 +21,25 @@ export class ModuleBuilder {
 
   constructor(
     moduleName: string,
-    ListItem: ListItem[],
+    HttpLIstItems: HttpLIstItem[],
+    UsecaseListItems: UsecaseListItem[] = [],
     ModuleItems: ModuleItems = {},
   ) {
-    const Usecases = ListItem.map((item) => item.usecase);
-    const Gateways = ListItem.map((item) => item.gateway);
-    const Controllers = ListItem.map((item) => item.controller).filter(Boolean);
+    const { InfraProviders, Repositories } = ModuleItems;
+
+    const Usecases: any[] = [];
+    const Gateways: any[] = [];
+    const Controllers: any[] = [];
+    UsecaseListItems.map((item) => {
+      Usecases.push(item.usecase);
+      Gateways.push(item.gateway);
+    });
+
+    const Adapters: IAdapter[] = [];
+    HttpLIstItems.map((item) => {
+      Adapters.push(item.adapter);
+      Controllers.push(item.controller);
+    });
 
     const Imports: any[] = [];
     if (moduleName !== 'auth') Imports.push(AuthModule);
@@ -31,12 +48,13 @@ export class ModuleBuilder {
       imports: Imports,
       providers: [
         ...Usecases,
-        ...(ModuleItems.Repositories ?? []),
         ...Gateways,
-        ...(ModuleItems.InfraProviders ?? []),
+        ...(Repositories ?? []),
+        ...(InfraProviders ?? []),
+        ...Adapters,
       ],
-      controllers: Controllers,
-      exports: [...Usecases, ...(ModuleItems.InfraProviders ?? [])],
+      controllers: Controllers as any,
+      exports: [...Usecases, ...Adapters, ...(InfraProviders ?? [])],
     };
   }
 }

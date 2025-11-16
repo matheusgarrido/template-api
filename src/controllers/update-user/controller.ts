@@ -7,24 +7,24 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import type { UpdateUserPresenter as P } from './adapter';
 import type { IUpdateUserInput as I } from '@usecases/update-user/dto';
-import { UpdateUserUsecase } from '@usecases/update-user/update-user.usecase';
+import { UpdateUserUsecase } from '@usecases/update-user/usecase';
 import { IController } from '@shared/protocols/controller.protocol';
-import { userMock } from '@tests/user.mock';
-import { AuthGuard } from '@infra/guards/auth/auth.guard';
+import { AuthGuard } from '@infra/decorators/auth/auth.guard';
 import { UpdateUserBodyDto, UpdateUserParamsDto } from './dto';
-import { CurrentUserDto } from '@shared/decorators/current-user/dto';
+import { CurrentUserDto } from '@shared/decorators';
 import { CurrentUserDecorator } from '@shared/decorators';
-
-export type { I, P };
+import { UpdateUserAdapter, updateUserAdapterMock } from './adapter';
 
 @ApiTags('Users')
 @UseGuards(AuthGuard)
 @Controller('users')
-export class UpdateUserController extends IController<UpdateUserUsecase> {
-  constructor(protected readonly usecase: UpdateUserUsecase) {
-    super(usecase);
+export class UpdateUserController extends IController<
+  UpdateUserAdapter,
+  UpdateUserUsecase
+> {
+  constructor(adapter: UpdateUserAdapter, usecase: UpdateUserUsecase) {
+    super(adapter, usecase);
   }
 
   @Patch(':id')
@@ -38,16 +38,14 @@ export class UpdateUserController extends IController<UpdateUserUsecase> {
     status: 200,
     description: 'User updated successfully',
     schema: {
-      example: {
-        id: userMock.id,
-      } as P,
+      example: updateUserAdapterMock.value,
     },
   })
   async update(
     @Body() payload: UpdateUserBodyDto,
     @Param() { id }: UpdateUserParamsDto,
     @CurrentUserDecorator() currentUser: CurrentUserDto,
-  ): Promise<P> {
+  ) {
     const input: I = {
       id,
       currentUser,
@@ -56,10 +54,6 @@ export class UpdateUserController extends IController<UpdateUserUsecase> {
 
     const output = await this.usecase.execute(input);
 
-    const adapterResponse: P = {
-      id: `${output}`,
-    };
-
-    return adapterResponse;
+    return this.adapter.adapt(output);
   }
 }

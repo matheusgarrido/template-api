@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
-import { Entity, EntityId } from '@entities/entity';
+import { Entity } from '@entities/entity';
+import { EntityId } from './entity.protocol';
 
 type ModelAttributes<EntityProperties> = EntityProperties & {
   id: EntityId | undefined;

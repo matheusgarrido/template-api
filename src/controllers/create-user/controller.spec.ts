@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateUserController } from './create-user.controller';
-import { CreateUserUsecase } from '@usecases/create-user/create-user.usecase';
+import { CreateUserController } from './controller';
+import { CreateUserUsecase } from '@usecases/create-user/usecase';
 import { CreateUserBodyDto } from './dto';
-import type { ICreateUserPresenter } from './adapter';
+import { CreateUserAdapter } from './adapter';
 import { usecaseMock } from '@tests/usecases.mock';
 import { userMock } from '@tests/user.mock';
 
@@ -50,7 +50,7 @@ describe('CreateUserController', () => {
       expect(usecaseMock.execute).toHaveBeenCalledWith(mockInput);
       expect(usecaseMock.execute).toHaveBeenCalledTimes(1);
 
-      const expectedResponse: ICreateUserPresenter = {
+      const expectedResponse: CreateUserAdapter = {
         id: userMock.id as string,
       };
 

@@ -1,9 +1,6 @@
-export type EntityId = string | number;
+import { EntityId, IEntity } from '@shared/protocols/entity.protocol';
 
-export type PartialEntity<E extends Entity<any>> =
-  E extends Entity<infer P> ? Entity<Partial<P>> : never;
-
-export class Entity<EntityProps> {
+export class Entity<EntityProps> implements IEntity<EntityProps> {
   private readonly $properties: Partial<EntityProps>;
   private readonly $id: EntityId | undefined;
   private readonly $entityName: string;
@@ -31,9 +28,5 @@ export class Entity<EntityProps> {
       ...this.$properties,
       id: this.$id,
     };
-  }
-
-  toSafeJSON() {
-    return this.toJSON();
   }
 }

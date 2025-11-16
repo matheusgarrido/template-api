@@ -1,4 +1,4 @@
-import { EntityId } from '@entities/entity';
+import { EntityId } from '@shared/protocols/entity.protocol';
 import { ISafeUserEntity } from '@entities/user.entity';
 import { IdParamsDto } from '@shared/protocols/dto.protocol';
 import {

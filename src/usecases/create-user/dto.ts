@@ -1,5 +1,4 @@
-import { EntityId } from '@entities/entity';
-
+import { EntityId } from '@shared/protocols/entity.protocol';
 export class ICreateUserInput {
   name: string;
   email: string;

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { AuthLoginController } from './auth-login.controller';
-import { AuthLoginUsecase } from '@usecases/auth-login/auth-login.usecase';
+import { AuthLoginController } from './controller';
+import { AuthLoginUsecase } from '@usecases/auth-login/usecase';
 import { AuthLoginBodyDto } from './dto';
 
 // 1. Mock do Usecase

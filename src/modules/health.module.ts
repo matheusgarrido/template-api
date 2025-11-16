@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import * as HealthCheck from '@usecases/health-check';
+import * as HttpHealthCheck from '@controllers/health-check';
 import { ModuleBuilder } from '@shared/handler/module-builder';
 
-const moduleMetadata = new ModuleBuilder('health', [HealthCheck]);
+const moduleMetadata = new ModuleBuilder('health', [HttpHealthCheck]);
 
 @Module(moduleMetadata.metadata)
 export class HealthModule {}

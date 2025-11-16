@@ -1,7 +1,7 @@
-import { EntityId } from '@entities/entity';
 import { SafeUser } from '@entities/user.entity';
-import { CurrentUserDto } from '@shared/decorators/current-user/dto';
+import { CurrentUserDto } from '@shared/decorators';
 import { InvalidTokenAccessError } from '@shared/errors/unauthorized';
+import { EntityId } from '@shared/protocols/entity.protocol';
 import jwt from 'jsonwebtoken';
 
 interface ITokenInput extends Partial<SafeUser> {

@@ -3,8 +3,8 @@ import type {
   ICreateGroupInput as I,
   ICreateGroupInput,
 } from '@usecases/create-group/dto';
-import type { CreateGroupPresenter as P } from './adapter';
-import { CreateGroupUsecase } from '@usecases/create-group/create-group.usecase';
+import { CreateGroupAdapter, createGroupAdapterMock } from './adapter';
+import { CreateGroupUsecase } from '@usecases/create-group/usecase';
 import { IController } from '@shared/protocols/controller.protocol';
 import { ApiTags, ApiBody, ApiResponse, ApiProperty } from '@nestjs/swagger';
 import { groupMock } from '@tests/group.mock';
@@ -26,9 +26,12 @@ class CreateGroupDto implements ICreateGroupInput {
 
 @ApiTags('Groups')
 @Controller('groups')
-export class CreateGroupController extends IController<CreateGroupUsecase> {
-  constructor(protected readonly usecase: CreateGroupUsecase) {
-    super(usecase);
+export class CreateGroupController extends IController<
+  CreateGroupAdapter,
+  CreateGroupUsecase
+> {
+  constructor(adapter: CreateGroupAdapter, usecase: CreateGroupUsecase) {
+    super(adapter, usecase);
   }
 
   @Post()
@@ -41,18 +44,12 @@ export class CreateGroupController extends IController<CreateGroupUsecase> {
     status: 201,
     description: 'Group created successfully',
     schema: {
-      example: {
-        id: groupMock.id,
-      } as P,
+      example: createGroupAdapterMock.value,
     },
   })
-  async create(@Body() input: I): Promise<P> {
+  async create(@Body() input: I) {
     const output = await this.usecase.execute(input);
 
-    const adapterResponse: P = {
-      id: `${output}`,
-    };
-
-    return adapterResponse;
+    return this.adapter.adapt(output);
   }
 }

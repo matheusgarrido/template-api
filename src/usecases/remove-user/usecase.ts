@@ -19,6 +19,6 @@ export class RemoveUserUsecase extends IUsecase<I, O, G> {
     const user = new User(input.currentUser, input.currentUser.id);
     const wasDeleted = await this.gateway.userRepository.remove(user);
 
-    return wasDeleted;
+    return { user, deleted: wasDeleted };
   }
 }
