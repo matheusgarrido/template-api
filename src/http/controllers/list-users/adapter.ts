@@ -1,12 +1,11 @@
 import { IAdapter } from '@shared/protocols/adapter.protocol';
-import { ISafeUserEntity, SafeUser } from '@entities/user.entity';
 import type { IListUserOutput as O } from '@usecases/list-users/dto';
 import { userMock } from '@tests/user.mock';
-import { EntityJson } from '@shared/protocols/entity.protocol';
+import { IPublicUser } from '@entities/user.entity';
 
 type AdapterInput = Awaited<O>;
 interface IListUsersHttpResponse {
-  items: EntityJson<ISafeUserEntity>[];
+  items: IPublicUser[];
   count: number;
   total: number;
 }
@@ -17,7 +16,7 @@ export class ListUsersAdapter extends IAdapter<
 > {
   adapt(input: AdapterInput) {
     return {
-      items: input.data.map((user) => new SafeUser(user.properties).toJSON()),
+      items: input.data.map((user) => user.toPublic()),
       count: input.data.length,
       total: input.total,
     };

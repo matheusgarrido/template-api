@@ -7,7 +7,8 @@
   "testEnvironment": "node",
   "moduleNameMapper": {
     "^@project/infra/(.*)*": "<rootDir>/infra/$1",
-    "^@controllers/(.*)*": "<rootDir>/src/controllers/$1",
+    "^@controllers/(.*)*": "<rootDir>/src/http/controllers/$1",
+    "^@http/(.*)*": "<rootDir>/src/http/$1",
     "^@usecases/(.*)*": "<rootDir>/src/usecases/$1",
     "^@repositories/(.*)*": "<rootDir>/src/repositories/$1",
     "^@entities/(.*)*": "<rootDir>/src/entities/$1",

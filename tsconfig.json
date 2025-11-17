@@ -25,7 +25,8 @@
     "importHelpers": true,
     "paths": {
       "@project/infra/*": ["infra/*"],
-      "@controllers/*": ["src/controllers/*"],
+      "@controllers/*": ["src/http/controllers/*"],
+      "@http/*": ["src/http/*"],
       "@usecases/*": ["src/usecases/*"],
       "@repositories/*": ["src/repositories/*"],
       "@entities/*": ["src/entities/*"],

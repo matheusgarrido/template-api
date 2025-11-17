@@ -1,7 +1,9 @@
+import { EntityId } from '@shared/protocols/entity.protocol';
 import { Entity } from './entity';
 
 export interface IUserEntity {
   name?: string;
+  username?: string;
   email?: string;
   password?: string;
   passwordHash?: string;
@@ -10,12 +12,21 @@ export interface IUserEntity {
   deletedAt?: Date;
 }
 
-export type ISafeUserEntity = Omit<IUserEntity, 'passwordHash' | 'password'>;
-export class SafeUser extends Entity<ISafeUserEntity> {}
+export interface ITokenUser {
+  id: EntityId;
+}
+
+export type IPublicUser = Pick<User, 'username' | 'id'>;
+export type IPrivateUser = IPublicUser &
+  Omit<IUserEntity, 'password' | 'passwordHash'>;
 
 export class User extends Entity<IUserEntity> {
   get name() {
     return this.properties.name;
+  }
+
+  get username() {
+    return this.properties.username;
   }
 
   get email() {
@@ -42,13 +53,23 @@ export class User extends Entity<IUserEntity> {
     return this.properties.deletedAt;
   }
 
-  toSafeJSON(): SafeUser {
+  toPublic(): IPublicUser {
+    return {
+      id: this.id,
+      username: this.username,
+    };
+  }
+
+  toPrivate(): IPrivateUser {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, passwordHash, ...safeProperties } = this
-      .properties as any;
+    const { password, passwordHash, ...safeProperties } = this.toJSON() as any;
     return {
       ...safeProperties,
       id: this.id,
     };
+  }
+
+  toToken(): ITokenUser {
+    return { id: this.id as EntityId };
   }
 }

@@ -29,9 +29,9 @@ export class AuthLoginUsecase extends IUsecase<I, O, G> {
     if (!isValidPassword) throw new InvalidUserCredentialsError();
 
     const token = this.gateway.tokenService.generate({
-      ...user.toSafeJSON(),
-      id: user.id!,
+      user,
     });
-    return token;
+
+    return { user, token };
   }
 }

@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { User } from '@entities/user.entity';
+import { IUserEntity, User } from '@entities/user.entity';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { validateSync } from 'class-validator';
 import { Request } from 'express';
@@ -20,7 +20,7 @@ export const CurrentUserDecorator = createParamDecorator(
     validateSync(dto, validationOptionsPipe);
 
     // Cria uma instância real da entidade
-    const entityUser = new User(dto, dto.id);
+    const entityUser = new User(dto as Partial<IUserEntity>, dto.id);
 
     // Se o decorador foi chamado com uma chave (ex: @CurrentUser('email')),
     // devolve apenas aquela propriedade

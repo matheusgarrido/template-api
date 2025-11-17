@@ -2,12 +2,12 @@ import { EntityId } from '@shared/protocols/entity.protocol';
 import { IAdapter } from '@shared/protocols/adapter.protocol';
 import type { IRemoveUserOutput as O } from '@usecases/remove-user/dto';
 import { userMock } from '@tests/user.mock';
-import { SafeUser } from '@entities/user.entity';
+import { IPublicUser } from '@entities/user.entity';
 
 type AdapterInput = Awaited<O>;
 export interface IRemoveUserHttpResponse {
   id: EntityId;
-  user: SafeUser;
+  user: IPublicUser;
   deleted: boolean;
 }
 
@@ -19,7 +19,7 @@ export class RemoveUserAdapter extends IAdapter<
     return {
       deleted: input.deleted,
       id: input.user.id!,
-      user: new SafeUser(input.user),
+      user: input.user.toPublic(),
     };
   }
 }

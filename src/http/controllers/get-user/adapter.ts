@@ -1,13 +1,12 @@
-import { ISafeUserEntity, SafeUser } from '@entities/user.entity';
+import { IPrivateUser } from '@entities/user.entity';
 import { IAdapter } from '@shared/protocols/adapter.protocol';
-import { EntityJson } from '@shared/protocols/entity.protocol';
 import { userMock } from '@tests/user.mock';
 import type { IGetUserOutput as O } from '@usecases/get-user/dto';
 
 type AdapterInput = Awaited<O>;
 
 interface IGetUserHttpResponse {
-  user: EntityJson<ISafeUserEntity>;
+  user: IPrivateUser;
 }
 
 export class GetUserAdapter extends IAdapter<
@@ -16,7 +15,7 @@ export class GetUserAdapter extends IAdapter<
 > {
   adapt(input: AdapterInput) {
     return {
-      user: new SafeUser(input).toJSON(),
+      user: input.toPrivate(),
     };
   }
 }

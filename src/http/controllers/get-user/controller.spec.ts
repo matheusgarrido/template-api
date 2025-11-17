@@ -58,7 +58,7 @@ describe('GetUserController', () => {
       expect(usecaseMock.execute).toHaveBeenCalledWith(mockInput);
       expect(usecaseMock.execute).toHaveBeenCalledTimes(1);
 
-      const expectedResponse: P = { user: userMock.toSafeJSON() };
+      const expectedResponse: P = { user: userMock.toPrivate() };
 
       expect(result).toEqual(expectedResponse);
     });

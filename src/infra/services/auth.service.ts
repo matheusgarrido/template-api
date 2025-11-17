@@ -21,8 +21,7 @@ export class AuthService {
     if (!isValidPassword) throw new InvalidUserCredentialsError();
 
     const token = this.tokenService.generate({
-      ...user.toSafeJSON(),
-      id: user.id!,
+      user,
     });
     return token;
   }
