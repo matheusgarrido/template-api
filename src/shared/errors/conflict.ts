@@ -12,8 +12,20 @@ export class UserEmailAlreadyUsedError extends ConflictError {
   }
 }
 
+export class UserAlreadyDeletedError extends ConflictError {
+  constructor() {
+    super('user-already-deleted', 3);
+  }
+}
+
 export class GroupAlreadyExistsError extends ConflictError {
   constructor() {
-    super('group-already-exists', 2);
+    super('group-already-exists', 4);
+  }
+}
+
+export class GroupAlreadyDeletedError extends ConflictError {
+  constructor() {
+    super('group-already-deleted', 5);
   }
 }
