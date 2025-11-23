@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IListUserInput as I, IListUserOutput as O } from './dto';
+import { IListUsersInput as I, IListUsersOutput as O } from './dto';
 import { IListUsersGateway as G } from './gateway';
 import { IUsecase } from '@shared/protocols/usecase.protocol';
 
