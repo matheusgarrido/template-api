@@ -1,6 +1,6 @@
 import { ModuleMetadata, Provider } from '@nestjs/common';
 import { AuthModule } from '@modules/index';
-import { IAdapter } from '@shared/protocols/adapter.protocol';
+import { AbstractAdapter } from '@shared/protocols/adapter.protocol';
 
 interface UsecaseListItem {
   gateway: any;
@@ -35,7 +35,7 @@ export class ModuleBuilder {
       Gateways.push(item.gateway);
     });
 
-    const Adapters: IAdapter[] = [];
+    const Adapters: AbstractAdapter[] = [];
     HttpLIstItems.map((item) => {
       Adapters.push(item.adapter);
       Controllers.push(item.controller);

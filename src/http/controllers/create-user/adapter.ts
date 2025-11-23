@@ -1,5 +1,5 @@
 import { EntityId } from '@shared/protocols/entity.protocol';
-import { IAdapter } from '@shared/protocols/adapter.protocol';
+import { AbstractAdapter } from '@shared/protocols/adapter.protocol';
 import { userMock } from '@tests/user.mock';
 import type { ICreateUserOutput as O } from '@usecases/create-user/dto';
 import { IHateoasLink, Routes } from '@http/routes';
@@ -10,7 +10,7 @@ export interface ICreateUserHttpResponse extends IHateoasLink {
   id: EntityId;
 }
 
-export class CreateUserAdapter extends IAdapter<
+export class CreateUserAdapter extends AbstractAdapter<
   ICreateUserHttpResponse,
   AdapterInput
 > {

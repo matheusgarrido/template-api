@@ -1,10 +1,10 @@
-import { IAdapter } from '@shared/protocols/adapter.protocol';
+import { AbstractAdapter } from '@shared/protocols/adapter.protocol';
 
 interface IHealthCheckHttpResponse {
   status: string;
 }
 
-export class HealthCheckAdapter extends IAdapter<IHealthCheckHttpResponse> {
+export class HealthCheckAdapter extends AbstractAdapter<IHealthCheckHttpResponse> {
   adapt() {
     return {
       status: 'ok',

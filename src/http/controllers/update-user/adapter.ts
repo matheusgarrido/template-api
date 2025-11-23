@@ -1,20 +1,25 @@
-import { IAdapter } from '@shared/protocols/adapter.protocol';
+import { IHateoasLink, Routes } from '@http/routes';
+import { AbstractAdapter } from '@shared/protocols/adapter.protocol';
 import { EntityId } from '@shared/protocols/entity.protocol';
 import { userMock } from '@tests/user.mock';
 import type { IUpdateUserOutput as O } from '@usecases/update-user/dto';
 
 type AdapterInput = Awaited<O>;
-interface IUpdateUserHttpResponse {
+
+export interface IUpdateUserHttpResponse extends IHateoasLink {
   id: EntityId;
 }
 
-export class UpdateUserAdapter extends IAdapter<
+export class UpdateUserAdapter extends AbstractAdapter<
   IUpdateUserHttpResponse,
   AdapterInput
 > {
-  adapt(input: AdapterInput) {
+  adapt(input: AdapterInput): IUpdateUserHttpResponse {
     return {
       id: input,
+      _links: {
+        ...Routes.hateoasGroup('user', { userId: input as string }),
+      },
     };
   }
 }

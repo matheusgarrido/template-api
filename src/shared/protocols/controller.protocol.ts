@@ -2,11 +2,11 @@ import { PinoLogger } from 'nestjs-pino';
 import { IUsecase } from './usecase.protocol';
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { IAdapter } from './adapter.protocol';
+import { AbstractAdapter } from './adapter.protocol';
 
 @Injectable()
 export abstract class IController<
-  Adapter extends IAdapter<any, any> = any,
+  Adapter extends AbstractAdapter<any, any> = any,
   Usecase extends IUsecase<any, any, any> = any,
 > {
   protected readonly logger: PinoLogger;

@@ -5,7 +5,7 @@ interface IRouterLink {
 
 type IRouterReplacerLink = Record<string, string>;
 
-type IHateoasLinkNest = {
+export type IHateoasLinkNest = {
   [key: string]: IRouterLink | IHateoasLinkNest | undefined;
 };
 

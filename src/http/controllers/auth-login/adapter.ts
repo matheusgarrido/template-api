@@ -1,6 +1,6 @@
 import { IPrivateUser } from '@entities/user.entity';
 import { IHateoasLink, Routes } from '@http/routes';
-import { IAdapter } from '@shared/protocols/adapter.protocol';
+import { AbstractAdapter } from '@shared/protocols/adapter.protocol';
 import { userMock } from '@tests/user.mock';
 import type { IAuthLoginOutput as O } from '@usecases/auth-login/dto';
 
@@ -11,7 +11,7 @@ export interface IAuthLoginHttpResponse extends IHateoasLink {
   user: IPrivateUser;
 }
 
-export class AuthLoginAdapter extends IAdapter<
+export class AuthLoginAdapter extends AbstractAdapter<
   IAuthLoginHttpResponse,
   AdapterInput
 > {

@@ -1,5 +1,5 @@
 import { EntityId } from '@shared/protocols/entity.protocol';
-import { IAdapter } from '@shared/protocols/adapter.protocol';
+import { AbstractAdapter } from '@shared/protocols/adapter.protocol';
 import { groupMock } from '@tests/group.mock';
 import type { ICreateGroupOutput as O } from '@usecases/create-group/dto';
 
@@ -8,7 +8,7 @@ interface ICreateGroupHttpResponse {
   id: EntityId;
 }
 
-export class CreateGroupAdapter extends IAdapter<
+export class CreateGroupAdapter extends AbstractAdapter<
   ICreateGroupHttpResponse,
   AdapterInput
 > {
