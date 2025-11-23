@@ -25,6 +25,18 @@ const usersRoutes = {
   list: { href: '/users', method: 'GET' },
 };
 
+const groupRoutes = {
+  self: { href: '/groups/:groupId', method: 'GET' },
+  update: { href: '/groups/:groupId', method: 'PATCH' },
+  remove: { href: '/groups/:groupId', method: 'DELETE' },
+};
+
+const groupsRoutes = {
+  ...groupRoutes,
+  create: { href: '/groups', method: 'POST' },
+  list: { href: '/groups', method: 'GET' },
+};
+
 const authRoutes = {
   login: { href: '/auth/login', method: 'POST' },
 };
@@ -32,10 +44,12 @@ const authRoutes = {
 const routeGroup = {
   user: userRoutes,
   users: usersRoutes,
+  group: groupRoutes,
+  groups: groupsRoutes,
   auth: authRoutes,
 };
 
-const allRoutes = { ...usersRoutes, ...authRoutes };
+const allRoutes = { ...usersRoutes, ...groupsRoutes, ...authRoutes };
 
 // const allRoutes = Object.values(routeGroup).reduce(
 //   (acc, group) => Object.assign(acc, group),
@@ -43,12 +57,11 @@ const allRoutes = { ...usersRoutes, ...authRoutes };
 // );
 
 export class Routes {
-  static get(
-    key: keyof typeof allRoutes,
+  private static replacer(
+    routerLink: IRouterLink,
     replacers?: IRouterReplacerLink,
   ): IRouterLink {
-    const link = allRoutes[key];
-    let href = link.href;
+    let href = routerLink.href;
 
     const replacersArray = Object.keys(replacers || {});
 
@@ -57,7 +70,7 @@ export class Routes {
       href = href.replace(`:${param}`, value);
     }
 
-    return { href, method: link.method ?? 'GET' };
+    return { href, method: routerLink.method ?? 'GET' };
   }
 
   static router(key: keyof typeof allRoutes) {
@@ -73,8 +86,8 @@ export class Routes {
     const routeGroups = routeGroup[key];
 
     for (const routeGroup in routeGroups) {
-      const routeKey = routeGroup as keyof typeof allRoutes;
-      const routeValue = Routes.get(routeKey, replacers);
+      const routeLink: IRouterLink = routeGroups[routeGroup];
+      const routeValue = Routes.replacer(routeLink, replacers);
 
       if (routeValue.href.includes(':')) {
         delete routeGroups[routeGroup];

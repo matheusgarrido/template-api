@@ -1,30 +1,15 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import type {
-  ICreateGroupInput as I,
-  ICreateGroupInput,
-} from '@usecases/create-group/dto';
+import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
+import type { ICreateGroupInputBody } from '@usecases/create-group/dto';
 import { CreateGroupAdapter, createGroupAdapterMock } from './adapter';
 import { CreateGroupUsecase } from '@usecases/create-group/usecase';
 import { IController } from '@shared/protocols/controller.protocol';
-import { ApiTags, ApiBody, ApiResponse, ApiProperty } from '@nestjs/swagger';
-import { groupMock } from '@tests/group.mock';
-
-class CreateGroupDto implements ICreateGroupInput {
-  @ApiProperty({
-    description: 'The name of the group',
-    example: groupMock.name,
-  })
-  name: string;
-
-  @ApiProperty({
-    description: 'The description of the group',
-    example: groupMock.deletedAt,
-    uniqueItems: true,
-  })
-  description?: string;
-}
+import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { CurrentUserDecorator, CurrentUserDto } from '@shared/decorators';
+import { AuthGuard } from '@infra/decorators/auth';
+import { CreateGroupBodyDto } from './dto';
 
 @ApiTags('Groups')
+@UseGuards(AuthGuard)
 @Controller('groups')
 export class CreateGroupController extends IController<
   CreateGroupAdapter,
@@ -37,7 +22,7 @@ export class CreateGroupController extends IController<
   @Post()
   @HttpCode(201)
   @ApiBody({
-    type: CreateGroupDto,
+    type: CreateGroupBodyDto,
     description: 'Group data do be created',
   })
   @ApiResponse({
@@ -47,8 +32,14 @@ export class CreateGroupController extends IController<
       example: createGroupAdapterMock.value,
     },
   })
-  async create(@Body() input: I) {
-    const output = await this.usecase.execute(input);
+  async create(
+    @Body() input: ICreateGroupInputBody,
+    @CurrentUserDecorator() currentUser: CurrentUserDto,
+  ) {
+    const output = await this.usecase.execute({
+      currentUser,
+      ...input,
+    });
 
     return this.adapter.adapt(output);
   }

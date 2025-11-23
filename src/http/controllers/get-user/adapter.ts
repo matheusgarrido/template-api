@@ -17,7 +17,9 @@ export class GetUserAdapter extends AbstractAdapter<
   adapt(input: AdapterInput): IGetUserHttpResponse {
     return {
       user: input.toPrivate(),
-      _links: Routes.hateoasGroup('user', { userId: input.id as string }),
+      _links: {
+        ...Routes.hateoasGroup('user', { userId: input.id as string }),
+      },
     };
   }
 }
