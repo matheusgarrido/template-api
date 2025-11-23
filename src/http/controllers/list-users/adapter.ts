@@ -2,7 +2,7 @@ import {
   AbstractAdapter,
   IListAdapter,
 } from '@shared/protocols/adapter.protocol';
-import type { IListUserOutput as O } from '@usecases/list-users/dto';
+import type { IListUsersOutput as O } from '@usecases/list-users/dto';
 import { userMock } from '@tests/user.mock';
 import { IPublicUser } from '@entities/user.entity';
 import { Routes } from '@http/routes';
