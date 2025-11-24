@@ -1,6 +1,6 @@
 .PHONY: dev prod sh down-dev down-prod kill-docker-proxy down restart stop-all kill \
-        build-dev build-prod logs status clean migrate-dev migration-undo-dev \
-        migration-reset-dev test help
+		build-dev build-prod logs status clean migrate-dev migration-undo-dev \
+		migration-reset-dev test help
 
 # Define variáveis para os nomes dos arquivos docker-compose
 # DOCKER_COMPOSE_PATH = ./infra/docker
@@ -76,23 +76,19 @@ stop-all: ## Para todos os containers da API e mata processos Node locais na por
 	@echo "Aplicação finalizada."
 
 # ----------------
-# Mata processos Node que estejam usando a porta 3000
+# Mata processos que estejam usando a porta especificada (padrão: 3000)
+# Use: make kill PORT=8080
 # ----------------
-kill: ## Mata processos Node que estejam usando a porta 3000
-	@echo "Procurando processos na porta 3000..."
-	@if command -v netstat >/dev/null 2>&1; then \
-		echo "Usando netstat para encontrar processos..."; \
-		netstat -tulpn | grep :3000 | awk '{print $$7}' | cut -d'/' -f1 | xargs -r sudo kill -9 2>/dev/null || true; \
+kill: ## Mata processos que estejam usando a porta especificada (padrão: 3000).
+	@echo "Procurando processos na porta $(PORT)..."
+	@if command -v lsof >/dev/null 2>&1; then \
+		lsof -ti:$(PORT) | xargs -r sudo kill -9 2>/dev/null || true; \
+	elif command -v netstat >/dev/null 2>&1; then \
+		netstat -tulpn | grep :$(PORT) | awk '{print $$7}' | cut -d'/' -f1 | xargs -r sudo kill -9 2>/dev/null || true; \
 	elif command -v ss >/dev/null 2>&1; then \
-		echo "Usando ss para encontrar processos..."; \
-		ss -lptn 'sport = :3000' | awk -F\"pid=\" '{print $$2}' | cut -d',' -f1 | xargs -r sudo kill -9 2>/dev/null || true; \
-	else \
-		echo "Netstat e ss não disponíveis. Tentando lsof..."; \
-		lsof -ti:3000 | xargs -r sudo kill -9 2>/dev/null || true; \
+		ss -lptn 'sport = :$(PORT)' | awk -F\"pid=\" '{print $$2}' | cut -d',' -f1 | xargs -r sudo kill -9 2>/dev/null || true; \
 	fi
-	@echo "Processos na porta 3000 finalizados."	@echo "Procurando processos Node na porta 3000..."
-	@lsof -i :3000 | awk 'NR>1 {print $$2}' | xargs -r sudo kill -9
-	@echo "Todos os processos Node na porta 3000 foram finalizados."
+	@echo "Processos na porta $(PORT) finalizados."
 
 
 # ----------------
