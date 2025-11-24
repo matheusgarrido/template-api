@@ -2,9 +2,7 @@ version: "3.8"
 
 services:
   api:
-    build:
-      context: ../..
-      dockerfile: ./infra/docker/Dockerfile
+    image: api:latest
     volumes:
       - ../..:/usr/src/app
       - /usr/src/app/node_modules
@@ -18,7 +16,8 @@ services:
       DATABASE_NAME: ${DATABASE_NAME}
       NODE_ENV: development
     depends_on:
-      - mysql_db_dev_service
+      mysql_db_dev_service:
+        condition: service_healthy
     stdin_open: true
     tty: true
     restart: no
@@ -40,6 +39,21 @@ services:
       - 3307:3306
     volumes:
       - mysql-data-dev:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p$$MYSQL_ROOT_PASSWORD",
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     logging:
       driver: "json-file"
       options:
