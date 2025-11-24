@@ -6,8 +6,8 @@ export class UserNotFoundError extends NotFoundError {
   }
 }
 
-export class GroupNotFoundError extends NotFoundError {
+export class RoleNotFoundError extends NotFoundError {
   constructor() {
-    super('group-not-found', 2);
+    super('role-not-found', 2);
   }
 }

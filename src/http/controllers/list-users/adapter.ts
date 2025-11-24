@@ -19,11 +19,11 @@ export class ListUsersAdapter extends AbstractAdapter<
     const response: IListUsersHttpResponse = {
       items: input.data.map((user) => ({
         item: user.toPublic(),
-        _links: Routes.hateoasGroup('user', { userId: user.id as string }),
+        _links: Routes.hateoasRole('user', { userId: user.id as string }),
       })),
       count: input.data.length,
       total: input.total,
-      _links: Routes.hateoasGroup('users'),
+      _links: Routes.hateoasRole('users'),
     };
 
     return response;

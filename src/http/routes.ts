@@ -25,34 +25,34 @@ const usersRoutes = {
   list: { href: '/users', method: 'GET' },
 };
 
-const groupRoutes = {
-  self: { href: '/groups/:groupId', method: 'GET' },
-  update: { href: '/groups/:groupId', method: 'PATCH' },
-  remove: { href: '/groups/:groupId', method: 'DELETE' },
+const roleRoutes = {
+  self: { href: '/roles/:roleId', method: 'GET' },
+  update: { href: '/roles/:roleId', method: 'PATCH' },
+  remove: { href: '/roles/:roleId', method: 'DELETE' },
 };
 
-const groupsRoutes = {
-  ...groupRoutes,
-  create: { href: '/groups', method: 'POST' },
-  list: { href: '/groups', method: 'GET' },
+const rolesRoutes = {
+  ...roleRoutes,
+  create: { href: '/roles', method: 'POST' },
+  list: { href: '/roles', method: 'GET' },
 };
 
 const authRoutes = {
   login: { href: '/auth/login', method: 'POST' },
 };
 
-const routeGroup = {
+const routeRole = {
   user: userRoutes,
   users: usersRoutes,
-  group: groupRoutes,
-  groups: groupsRoutes,
+  role: roleRoutes,
+  roles: rolesRoutes,
   auth: authRoutes,
 };
 
-const allRoutes = { ...usersRoutes, ...groupsRoutes, ...authRoutes };
+const allRoutes = { ...usersRoutes, ...rolesRoutes, ...authRoutes };
 
-// const allRoutes = Object.values(routeGroup).reduce(
-//   (acc, group) => Object.assign(acc, group),
+// const allRoutes = Object.values(routeRole).reduce(
+//   (acc, role) => Object.assign(acc, role),
 //   {},
 // );
 
@@ -79,23 +79,23 @@ export class Routes {
     return link.href;
   }
 
-  static hateoasGroup(
-    key: keyof typeof routeGroup,
+  static hateoasRole(
+    key: keyof typeof routeRole,
     replacers?: IRouterReplacerLink,
   ) {
-    const routeGroups = routeGroup[key];
+    const routeRoles = routeRole[key];
 
-    for (const routeGroup in routeGroups) {
-      const routeLink: IRouterLink = routeGroups[routeGroup];
+    for (const routeRole in routeRoles) {
+      const routeLink: IRouterLink = routeRoles[routeRole];
       const routeValue = Routes.replacer(routeLink, replacers);
 
       if (routeValue.href.includes(':')) {
-        delete routeGroups[routeGroup];
+        delete routeRoles[routeRole];
       } else {
-        routeGroups[routeGroup] = routeValue;
+        routeRoles[routeRole] = routeValue;
       }
     }
 
-    return routeGroups;
+    return routeRoles;
   }
 }

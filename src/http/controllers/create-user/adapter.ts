@@ -18,7 +18,7 @@ export class CreateUserAdapter extends AbstractAdapter<
     return {
       id: input,
       _links: {
-        ...Routes.hateoasGroup('users', { userId: input as string }),
+        ...Routes.hateoasRole('users', { userId: input as string }),
       },
     };
   }

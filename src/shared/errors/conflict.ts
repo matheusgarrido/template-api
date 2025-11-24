@@ -18,14 +18,14 @@ export class UserAlreadyDeletedError extends ConflictError {
   }
 }
 
-export class GroupAlreadyExistsError extends ConflictError {
+export class RoleAlreadyExistsError extends ConflictError {
   constructor() {
-    super('group-already-exists', 4);
+    super('role-already-exists', 4);
   }
 }
 
-export class GroupAlreadyDeletedError extends ConflictError {
+export class RoleAlreadyDeletedError extends ConflictError {
   constructor() {
-    super('group-already-deleted', 5);
+    super('role-already-deleted', 5);
   }
 }

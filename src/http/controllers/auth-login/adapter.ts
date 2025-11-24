@@ -20,9 +20,9 @@ export class AuthLoginAdapter extends AbstractAdapter<
       token: input.token,
       user: input.user.toPrivate(),
       _links: {
-        ...Routes.hateoasGroup('auth', { userId: input.user.id as string }),
+        ...Routes.hateoasRole('auth', { userId: input.user.id as string }),
         user: {
-          ...Routes.hateoasGroup('users', { userId: input.user.id as string }),
+          ...Routes.hateoasRole('users', { userId: input.user.id as string }),
         },
       },
     };

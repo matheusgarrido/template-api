@@ -22,7 +22,7 @@ export class RemoveUserAdapter extends AbstractAdapter<
       id: input.user.id!,
       user: input.user.toPublic(),
       _links: {
-        ...Routes.hateoasGroup('user', { userId: input.user.id as string }),
+        ...Routes.hateoasRole('user', { userId: input.user.id as string }),
       },
     };
   }

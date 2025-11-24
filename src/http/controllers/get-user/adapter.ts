@@ -18,7 +18,7 @@ export class GetUserAdapter extends AbstractAdapter<
     return {
       user: input.toPrivate(),
       _links: {
-        ...Routes.hateoasGroup('user', { userId: input.id as string }),
+        ...Routes.hateoasRole('user', { userId: input.id as string }),
       },
     };
   }
