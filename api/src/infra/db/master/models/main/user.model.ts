@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import { IUserEntity, User } from '@entities/user.entity';
 import { IModel } from '@shared/protocols/models.protocol';
-import { PasswordService } from '@infra/services/password.service';
+import { PasswordService } from 'api/src/application/services/password.service';
 import { masterDatabase } from '@database/master';
 
 export class UserModel extends IModel<User> {

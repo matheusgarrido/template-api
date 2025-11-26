@@ -1,5 +1,5 @@
-import { PasswordService } from '@infra/services/password.service';
-import { TokenService } from '@infra/services/token.service';
+import { PasswordService } from 'api/src/application/services/password.service';
+import { TokenService } from 'api/src/application/services/token.service';
 import { Injectable } from '@nestjs/common';
 import { IGateway } from '@shared/protocols/gateway.protocol';
 import { PinoLogger } from 'nestjs-pino';

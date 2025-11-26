@@ -7,16 +7,17 @@
   "testEnvironment": "node",
   "moduleNameMapper": {
     "^@project/infra/(.*)*": "<rootDir>/infra/$1",
-    "^@controllers/(.*)*": "<rootDir>/src/http/controllers/$1",
-    "^@http/(.*)*": "<rootDir>/src/http/$1",
-    "^@usecases/(.*)*": "<rootDir>/src/usecases/$1",
-    "^@repositories/(.*)*": "<rootDir>/src/repositories/$1",
-    "^@entities/(.*)*": "<rootDir>/src/entities/$1",
-    "^@database/(.*)*": "<rootDir>/src/infra/db/$1",
-    "^@infra/(.*)*": "<rootDir>/src/infra/$1",
-    "^@modules/(.*)*": "<rootDir>/src/modules/$1",
-    "^@shared/(.*)*": "<rootDir>/src/shared/$1",
-    "^@tests/(.*)*": "<rootDir>/src/tests/$1"
+    "^@entities/(.*)*": "<rootDir>/api/src/domain/entities/$1",
+    "^@services/(.*)*": "<rootDir>/api/src/application/services/$1",
+    "^@usecases/(.*)*": "<rootDir>/api/src/application/usecases/$1",
+    "^@controllers/(.*)*": "<rootDir>/api/src/infra/http/controllers/$1",
+    "^@database/(.*)*": "<rootDir>/api/src/infra/db/$1",
+    "^@http/(.*)*": "<rootDir>/api/src/infra/http/$1",
+    "^@repositories/(.*)*": "<rootDir>/api/src/infra/repositories/$1",
+    "^@infra/(.*)*": "<rootDir>/api/src/infra/$1",
+    "^@modules/(.*)*": "<rootDir>/api/src/modules/$1",
+    "^@shared/(.*)*": "<rootDir>/api/src/shared/$1",
+    "^@tests/(.*)*": "<rootDir>/api/src/tests/$1"
   },
   "collectCoverageFrom": ["**/*.(t|j)s"],
   "coverageDirectory": "./coverage",
@@ -25,7 +26,7 @@
     "/coverage/",
     "/dist/",
     "/infra/database/migrations/",
-    "/src/main.ts",
-    "/src/test"
+    "/api/src/main.ts",
+    "/api/src/test"
   ]
 }

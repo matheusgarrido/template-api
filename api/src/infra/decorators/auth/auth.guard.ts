@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { InvalidTokenAccessError } from '@shared/errors';
 import { Observable } from 'rxjs';
 import { Request } from 'express';
-import { TokenService } from '@infra/services';
+import { TokenService } from 'api/src/application/services';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

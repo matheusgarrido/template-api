@@ -6,7 +6,7 @@ import * as UsecaseAuthLogin from '@usecases/auth-login';
 import * as HttpAuthLogin from '@controllers/auth-login';
 
 import { UserRepository } from '@repositories/user.repository';
-import { PasswordService, TokenService } from '@infra/services';
+import { PasswordService, TokenService } from 'api/src/application/services';
 import { AuthGuard } from '@infra/decorators/auth';
 
 const moduleMetadata = new ModuleBuilder(

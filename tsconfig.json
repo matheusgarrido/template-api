@@ -25,21 +25,18 @@
     "importHelpers": true,
     "paths": {
       "@project/infra/*": ["infra/*"],
-      "@controllers/*": ["src/http/controllers/*"],
-      "@http/*": ["src/http/*"],
-      "@usecases/*": ["src/usecases/*"],
-      "@repositories/*": ["src/repositories/*"],
-      "@entities/*": ["src/entities/*"],
-      "@database/*": ["src/infra/db/*"],
-      "@infra/*": ["src/infra/*"],
-      "@modules/*": ["src/modules/*"],
-      "@shared/*": ["src/shared/*"],
-      "@tests/*": ["src/tests/*"]
+      "@entities/*": ["api/src/domain/entities/*"],
+      "@services/*": ["api/src/application/services/*"],
+      "@usecases/*": ["api/src/application/usecases/*"],
+      "@controllers/*": ["api/src/infra/http/controllers/*"],
+      "@database/*": ["api/src/infra/db/*"],
+      "@http/*": ["api/src/infra/http/*"],
+      "@repositories/*": ["api/src/infra/repositories/*"],
+      "@infra/*": ["api/src/infra/*"],
+      "@modules/*": ["api/src/modules/*"],
+      "@shared/*": ["api/src/shared/*"],
+      "@tests/*": ["api/src/tests/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "infra/**/*.js",
-    "infra/database/migrations/20251001180805-create-users.ts"
-  ]
+  "include": ["api/src/**/*", "infra/**/*.js", "infra/database/migrations/*.ts"]
 }
