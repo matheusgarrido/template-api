@@ -15,9 +15,13 @@ services:
       DATABASE_PSWD: ${DATABASE_PSWD_DEV}
       DATABASE_NAME: ${DATABASE_NAME}
       NODE_ENV: development
+      RABBITMQ_URL: ${RABBITMQ_URL_DEV}
+
     depends_on:
       mysql_db_dev_service:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
     stdin_open: true
     tty: true
     restart: no
@@ -60,5 +64,24 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    hostname: rabbitmq
+    container_name: rabbitmq_dev
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER_DEV}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PSWD_DEV}
+    ports:
+      - "5672:5672" # Porta diferente para dev se quiser
+      - "15673:15672" # Painel dev
+    volumes:
+      - rabbitmq-dev-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   mysql-data-dev:
+  rabbitmq-dev-data:

@@ -11,6 +11,30 @@ services:
       DATABASE_USER: ${DATABASE_USER_PROD}
       DATABASE_PSWD: ${DATABASE_PSWD_PROD}
       DATABASE_NAME: ${DATABASE_NAME}
+      RABBITMQ_URL: ${RABBITMQ_URL_PROD}
+    depends_on:
+      - rabbitmq
     ports:
       - "3000:3000"
     restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    hostname: rabbitmq
+    container_name: rabbitmq_prod
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER_PROD}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PSWD_PROD}
+    ports:
+      - "5672:5672" # AMQP
+      - "15672:15672" # Painel de gerenciamento (opcional)
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  rabbitmq-data:
