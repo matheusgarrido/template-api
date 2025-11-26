@@ -16,6 +16,8 @@ services:
       DATABASE_NAME: ${DATABASE_NAME}
       NODE_ENV: development
       RABBITMQ_URL: ${RABBITMQ_URL_DEV}
+      RABBITMQ_USER: ${RABBITMQ_USER_DEV}
+      RABBITMQ_PSWD: ${RABBITMQ_PSWD_DEV}
 
     depends_on:
       mysql_db_dev_service:
@@ -37,10 +39,10 @@ services:
     container_name: mysql_db_dev
     restart: no
     environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PSWD_DEV}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PSWD}
       MYSQL_DATABASE: ${DATABASE_NAME}
     ports:
-      - 3307:3306
+      - ${DATABASE_PORT}:3306
     volumes:
       - mysql-data-dev:/var/lib/mysql
     healthcheck:
@@ -69,10 +71,10 @@ services:
     hostname: rabbitmq
     container_name: rabbitmq_dev
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER_DEV}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PSWD_DEV}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PSWD}
     ports:
-      - "5672:5672" # Porta diferente para dev se quiser
+      - "5672:5672" # Filas
       - "15673:15672" # Painel dev
     volumes:
       - rabbitmq-dev-data:/var/lib/rabbitmq
